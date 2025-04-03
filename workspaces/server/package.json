@@ -1,0 +1,7 @@
+{
+  "name": "@love-letter/server",
+  "version": "1.0.0",
+  "author": "Simon Chevalier",
+  "license": "MIT",
+  "private": true
+}
