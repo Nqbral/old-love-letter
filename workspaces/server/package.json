@@ -4,8 +4,14 @@
   "author": "Simon Chevalier",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "tsc": "tsc --build"
+  },
   "dependencies": {
     "@nestjs/platform-socket.io": "^11.0.13",
     "@nestjs/websockets": "^11.0.13"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
   }
 }
