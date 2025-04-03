@@ -3,5 +3,9 @@
   "version": "1.0.0",
   "author": "Simon Chevalier",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@nestjs/platform-socket.io": "^11.0.13",
+    "@nestjs/websockets": "^11.0.13"
+  }
 }
