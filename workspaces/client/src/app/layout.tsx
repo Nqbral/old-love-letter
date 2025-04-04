@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Quintessential } from 'next/font/google';
 
 import './globals.css';
 
@@ -8,13 +8,20 @@ export const metadata: Metadata = {
   description: 'Love Letter online game',
 };
 
+const quintessential = Quintessential({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-quintessential',
+  weight: ['400'],
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html className={`${quintessential.className}`}>
       <body>{children}</body>
     </html>
   );
