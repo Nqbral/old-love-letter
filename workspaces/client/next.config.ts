@@ -4,5 +4,6 @@ const nextConfig = {
 };
 
 module.exports = {
-  transpilePackages: ["@love-letter/shared"],
+  transpilePackages: ['@love-letter/shared'],
+  devIndicators: false,
 };
