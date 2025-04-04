@@ -6,7 +6,7 @@ import LinkButton from './components/buttons/LinkButton';
 
 export default function Home() {
   return (
-    <div className="container flex h-full min-h-screen w-full flex-col items-center justify-center gap-4">
+    <div className="flex h-full min-h-screen w-full flex-col items-center justify-center gap-4">
       <h1 className="">Love Letter</h1>
       <div className="flex flex-row gap-12">
         <LinkButton buttonText={'Jouer'} linkTo={'lobby'} primary={true} />
