@@ -25,15 +25,15 @@ export default function CardDescription({
         <h3 className="text-lg font-bold">{nameCard}</h3>
       </div>
       <div className="flex w-96 flex-col items-center border-r-2 border-b-2 border-l-2 border-slate-700 px-2 py-4 sm:w-xl">
-        <h4 className="mb-2 font-bold underline">Description</h4>
+        <h4 className="mb-2 underline">Description</h4>
         {description}
       </div>
       <div className="flex w-96 flex-col items-center border-r-2 border-b-2 border-l-2 border-slate-700 py-4 sm:w-xl">
-        <h4 className="mb-2 font-bold underline">Valeur</h4>
+        <h4 className="mb-2 underline">Valeur</h4>
         <p>{value}</p>
       </div>
       <div className="flex w-96 flex-col items-center border-r-2 border-b-2 border-l-2 border-slate-700 py-4 sm:w-xl">
-        <h4 className="mb-2 font-bold underline">Nombre d'exemplaire(s)</h4>
+        <h4 className="mb-2 underline">Nombre d'exemplaire(s)</h4>
         <p>{nbCard}</p>
       </div>
     </div>
