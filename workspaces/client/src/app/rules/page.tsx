@@ -99,10 +99,10 @@ export default function Rules() {
             Comparé à la version classique du jeu, les seules cartes{' '}
             <span className="font-bold">face visible</span> sont :
           </p>
-          <ul>
-            <li>- la dernière carte défaussée ou jouée par l'un des joueurs</li>
+          <ul className="list-inside list-disc text-center">
+            <li>la dernière carte défaussée ou jouée par l'un des joueurs</li>
             <li>
-              - les cartes dont les effets sont en cours (Espionne ou Servante)
+              les cartes dont les effets sont en cours (Espionne ou Servante)
             </li>
           </ul>
         </div>
