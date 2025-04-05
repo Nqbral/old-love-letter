@@ -1,7 +1,6 @@
 import { faComputer } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import desktopcomputer from '../../public/desktop-computer.svg';
 import LinkButton from './components/buttons/LinkButton';
 
 export default function Home() {

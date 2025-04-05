@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Quintessential } from 'next/font/google';
+import { MedievalSharp, Quintessential } from 'next/font/google';
 
 import './globals.css';
 
@@ -8,10 +8,10 @@ export const metadata: Metadata = {
   description: 'Love Letter online game',
 };
 
-const quintessential = Quintessential({
+const medievalsharp = MedievalSharp({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-quintessential',
+  variable: '--font-medievalsharp',
   weight: ['400'],
 });
 
@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className={`${quintessential.className}`}>
+    <html className={`${medievalsharp.className}`}>
       <body>{children}</body>
     </html>
   );
