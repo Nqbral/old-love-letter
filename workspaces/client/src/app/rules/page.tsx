@@ -1,6 +1,5 @@
 import { faCoins, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Image from 'next/image';
 
 import BaronImg from '../../../public/baron.png';
 import ChancellorImg from '../../../public/chancellor.png';
@@ -12,11 +11,14 @@ import PriestImg from '../../../public/priest.png';
 import PrinceImg from '../../../public/prince.png';
 import PrincessImg from '../../../public/princess.png';
 import SpyImg from '../../../public/spy.png';
+import PreviousNavBar from '../components/PreviousNavBar';
+import LinkButton from '../components/buttons/LinkButton';
 import CardDescription from '../components/rules/CardDescription';
 
 export default function Rules() {
   return (
-    <div className="flex h-full w-full flex-col items-center gap-16 py-12">
+    <div className="flex w-full flex-col items-center gap-16 py-12">
+      <PreviousNavBar linkTo="/" />
       <h1 className="text-primary text-4xl">Règles</h1>
       <div className="container flex flex-col items-center gap-8">
         <div className="flex flex-col items-center gap-3">
@@ -454,6 +456,7 @@ export default function Rules() {
           </div>
         </div>
       </div>
+      <LinkButton buttonText={'Retour au menu'} linkTo={'/'} primary={false} />
     </div>
   );
 }

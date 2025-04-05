@@ -5,6 +5,7 @@
   --color-primary-hover: oklch(76.9% 0.188 70.08);
   --color-secondary: oklch(50% 0.134 242.749);
   --color-secondary-hover: oklch(58.8% 0.158 241.966);
+  --color-bg-previous-navbar: #0b0c0f;
 }
 
 html {
