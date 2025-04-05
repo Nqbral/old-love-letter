@@ -8,16 +8,16 @@ type Props = {
 
 export default function PreviousNavBar({ linkTo }: Props) {
   return (
-    <nav
-      className={`active left border-primary bg-bg-previous-navbar fixed top-0 left-0 border-r-1 border-b-1 px-4 py-3`}
-    >
-      <Link href={linkTo}>
+    <Link href={linkTo}>
+      <nav
+        className={`active left border-primary bg-bg-previous-navbar fixed top-0 left-0 border-r-1 border-b-1 px-4 py-3`}
+      >
         <FontAwesomeIcon
           icon={faArrowLeft}
           height={20}
           color="oklch(87.9% 0.169 91.605)"
         />
-      </Link>
-    </nav>
+      </nav>
+    </Link>
   );
 }
