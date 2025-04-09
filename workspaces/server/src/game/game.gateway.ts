@@ -22,6 +22,7 @@ export class GameGateway implements OnGatewayConnection {
   @SubscribeMessage(ClientEvents.Ping)
   onPing(client: Socket): WsResponse<{ message: string }> {
     // This is the NestJS way of returning data to the exact same client, notice the return type as well
+    console.log('ping');
     return {
       event: ServerEvents.Pong,
       data: {

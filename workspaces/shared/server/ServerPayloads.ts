@@ -13,4 +13,6 @@ export type ServerPayloads = {
   [ServerEvents.GameMessage]: {
     message: string;
   };
+
+  [ServerEvents.Pong]: {};
 };

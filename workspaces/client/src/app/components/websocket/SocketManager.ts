@@ -23,8 +23,6 @@ export default class SocketManager {
       withCredentials: true,
     });
 
-    console.log('on passe là');
-
     this.onConnect();
     this.onDisconnect();
     this.onException();
@@ -86,7 +84,6 @@ export default class SocketManager {
           color: 'green',
           autoClose: 2000,
         });
-        console.log('Disconnected successfully!');
       }
 
       if (reason === 'io server disconnect') {
@@ -95,7 +92,6 @@ export default class SocketManager {
           color: 'orange',
           autoClose: 3000,
         });
-        console.log('You got disconnect by server');
       }
 
       if (
@@ -108,7 +104,6 @@ export default class SocketManager {
           color: 'orange',
           autoClose: 3000,
         });
-        console.log('Connection lost to the server');
         this.connectionLost = true;
       }
     });
