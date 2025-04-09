@@ -13,11 +13,9 @@ export class Instance {
 
   public currentRound: number = 1;
 
+  public listPlayers: [] = [];
+
   public scores: Record<Socket['id'], number> = {};
-
-  public delayBetweenRounds: number = 2;
-
-  private cardsRevealedForCurrentRound: Record<number, Socket['id']> = {};
 
   constructor(private readonly lobby: Lobby) {
     // this.initializeCards();

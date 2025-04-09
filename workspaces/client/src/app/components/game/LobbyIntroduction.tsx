@@ -1,6 +1,5 @@
 import { ClientEvents } from '@love-letter/shared/client/ClientEvents';
 import REGEX_RULES from 'app/constants';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
@@ -9,7 +8,6 @@ import SecondaryButton from '../buttons/SecondaryButton';
 import useSocketManager from '../hooks/useSocketManager';
 
 export default function LobbyIntroduction() {
-  const router = useRouter();
   const { sm } = useSocketManager();
 
   const [isDisplayedCreationLobby, setDisplayedCreationLobby] = useState(false);

@@ -20,6 +20,7 @@ export class Lobby {
   constructor(
     private readonly server: Server,
     public readonly maxClients: number,
+    public readonly namePlayer: string,
   ) {}
 
   public addClient(client: AuthenticatedSocket): void {

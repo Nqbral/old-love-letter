@@ -25,8 +25,10 @@ export class LobbyManager {
     client.data.lobby?.removeClient(client);
   }
 
-  public createLobby(): Lobby {
-    const lobby = new Lobby(this.server, 3);
+  public createLobby(nbPlayers: number, namePlayer: string): Lobby {
+    const lobby = new Lobby(this.server, nbPlayers, namePlayer);
+
+    this.lobbies.set(lobby.id, lobby);
 
     return lobby;
   }
