@@ -7,6 +7,9 @@ export enum ClientEvents {
   LobbyJoin = "client.lobby.join",
   LobbyLeave = "client.lobby.leave",
 
+  // Player
+  PlayerRename = "client.player.remame",
+
   // Game
   GamePlayCard = "client.game.play_card",
 }

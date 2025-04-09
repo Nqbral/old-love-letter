@@ -1,4 +1,8 @@
-import { LobbyCreateDto, LobbyJoinDto } from '@app/game/dtos';
+import {
+  LobbyCreateDto,
+  LobbyJoinDto,
+  LobbyRenamePlayerDto,
+} from '@app/game/dtos';
 import { LobbyManager } from '@app/game/lobby/lobby.manager';
 import { AuthenticatedSocket } from '@app/game/types';
 import { Logger } from '@nestjs/common';
@@ -57,7 +61,8 @@ export class GameGateway implements OnGatewayConnection {
   ): WsResponse<ServerPayloads[ServerEvents.GameMessage]> {
     const lobby = this.lobbyManager.createLobby(
       data.nbPlayers,
-      data.namePlayer,
+      client,
+      data.playerName,
     );
     lobby.addClient(client);
 
@@ -72,5 +77,13 @@ export class GameGateway implements OnGatewayConnection {
   @SubscribeMessage(ClientEvents.LobbyJoin)
   onLobbyJoin(client: AuthenticatedSocket, data: LobbyJoinDto): void {
     this.lobbyManager.joinLobby(data.lobbyId, client);
+  }
+
+  @SubscribeMessage(ClientEvents.PlayerRename)
+  onPlayerRename(
+    client: AuthenticatedSocket,
+    data: LobbyRenamePlayerDto,
+  ): void {
+    this.lobbyManager.renamePlayer(data.lobbyId, client, data.playerName);
   }
 }

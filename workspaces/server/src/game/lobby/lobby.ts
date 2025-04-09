@@ -1,7 +1,9 @@
 import { Instance } from '@app/game/instance/instance';
+import { ServerException } from '@app/game/server.exception';
 import { AuthenticatedSocket } from '@app/game/types';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
+import { SocketExceptions } from '@shared/server/SocketExceptions';
 import { Server, Socket } from 'socket.io';
 import { v4 } from 'uuid';
 
@@ -10,38 +12,44 @@ export class Lobby {
 
   public readonly createdAt: Date = new Date();
 
-  public readonly clients: Map<Socket['id'], AuthenticatedSocket> = new Map<
+  public clients: Map<Socket['id'], AuthenticatedSocket> = new Map<
     Socket['id'],
     AuthenticatedSocket
   >();
 
+  public players: Map<string, string> = new Map<string, string>();
+
   public readonly instance: Instance = new Instance(this);
+
+  public ownerName: string;
 
   constructor(
     private readonly server: Server,
     public readonly maxClients: number,
-    public readonly namePlayer: string,
-  ) {}
+    public readonly owner: AuthenticatedSocket,
+    ownername: string,
+  ) {
+    this.ownerName = ownername;
+    this.players.set(owner.id, ownername);
+  }
 
   public addClient(client: AuthenticatedSocket): void {
     this.clients.set(client.id, client);
     client.join(this.id);
     client.data.lobby = this;
 
-    if (this.clients.size >= this.maxClients) {
-      this.instance.triggerStart();
-    }
+    this.dispatchLobbyState();
+  }
+
+  public addPlayerName(client: AuthenticatedSocket, playerName: string): void {
+    this.players.set(client.id, playerName);
+    client.data.lobby = this;
 
     this.dispatchLobbyState();
   }
 
   public removeClient(client: AuthenticatedSocket): void {
     this.clients.delete(client.id);
-    client.leave(this.id);
-    client.data.lobby = null;
-
-    // If player leave then the game isn't worth to play anymore
-    this.instance.triggerFinish();
 
     // Alert the remaining player that client left lobby
     this.dispatchToLobby<ServerPayloads[ServerEvents.GameMessage]>(
@@ -54,14 +62,31 @@ export class Lobby {
     this.dispatchLobbyState();
   }
 
+  public deleteLobby(client: AuthenticatedSocket) {
+    if (client.id != this.owner.id) {
+      throw new ServerException(
+        SocketExceptions.LobbyError,
+        'Only the owner of the lobby can delete it',
+      );
+    }
+
+    this.clients.clear();
+    this.players.clear();
+    client.data.lobby = null;
+
+    this.instance.triggerFinish();
+
+    this.dispatchLobbyState();
+  }
+
   public dispatchLobbyState(): void {
     const payload: ServerPayloads[ServerEvents.LobbyState] = {
       lobbyId: this.id,
-      hasStarted: this.instance.hasStarted,
-      hasFinished: this.instance.hasFinished,
+      gameState: this.instance.gameState,
       playersCount: this.clients.size,
-      isSuspended: this.instance.isSuspended,
       scores: this.instance.scores,
+      players: Array.from(this.players.entries()),
+      ownerName: this.ownerName,
     };
 
     this.dispatchToLobby(ServerEvents.LobbyState, payload);

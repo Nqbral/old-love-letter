@@ -71,7 +71,6 @@ export default class SocketManager {
           autoClose: 2000,
         });
         this.connectionLost = false;
-        console.log('Reconnected to the server!');
       }
     });
   }

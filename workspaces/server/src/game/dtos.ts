@@ -4,16 +4,21 @@ export class LobbyCreateDto {
   @IsInt()
   @Min(2)
   @Max(6)
-  nbPlayers: 6;
+  nbPlayers: number;
 
   @IsString()
-  namePlayer: string;
+  playerName: string;
 }
 
 export class LobbyJoinDto {
   @IsString()
   lobbyId: string;
+}
+
+export class LobbyRenamePlayerDto {
+  @IsString()
+  lobbyId: string;
 
   @IsString()
-  namePlayer: string;
+  playerName: string;
 }
