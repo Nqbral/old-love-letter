@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { MedievalSharp, Quintessential } from 'next/font/google';
+import { MedievalSharp } from 'next/font/google';
 
 import './globals.css';
 
