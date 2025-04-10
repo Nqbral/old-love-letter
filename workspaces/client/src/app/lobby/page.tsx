@@ -1,7 +1,7 @@
 'use client';
 
-import PreviousNavBar from '@components/PreviousNavBar';
 import LobbyManager from '@components/lobby/LobbyManager';
+import PreviousNavBar from '@components/navbar/PreviousNavBar';
 
 export default function LobbyPage() {
   return (

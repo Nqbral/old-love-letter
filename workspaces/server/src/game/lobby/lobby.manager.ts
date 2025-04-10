@@ -3,6 +3,7 @@ import { Lobby } from '@app/game/lobby/lobby';
 import { ServerException } from '@app/game/server.exception';
 import { AuthenticatedSocket } from '@app/game/types';
 import { Cron } from '@nestjs/schedule';
+import { GameState } from '@shared/common/GameState';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
 import { SocketExceptions } from '@shared/server/SocketExceptions';
@@ -39,7 +40,7 @@ export class LobbyManager {
   public joinLobby(lobbyId: string, client: AuthenticatedSocket): void {
     const lobby = this.lobbies.get(lobbyId);
 
-    if (!lobby) {
+    if (!lobby || lobby.instance.gameState === GameState.GameDeleted) {
       this.server.to(client.id).emit(ServerEvents.LobbyError, {
         error: 'Lobby not found',
         message: 'Aucune partie a été trouvée pour cette URL.',
@@ -59,6 +60,35 @@ export class LobbyManager {
     }
 
     lobby.addClient(client);
+  }
+
+  public leaveLobby(lobbyId: string, client: AuthenticatedSocket): void {
+    const lobby = this.lobbies.get(lobbyId);
+
+    if (!lobby) {
+      this.server.to(client.id).emit(ServerEvents.LobbyError, {
+        error: 'Lobby not found',
+        message: 'Aucune partie a été trouvée pour cette URL.',
+      });
+      throw new ServerException(SocketExceptions.LobbyError, 'Lobby not found');
+    }
+
+    lobby.leaveLobby(client);
+  }
+
+  public deleteLobby(lobbyId: string, client: AuthenticatedSocket): void {
+    const lobby = this.lobbies.get(lobbyId);
+
+    if (!lobby) {
+      this.server.to(client.id).emit(ServerEvents.LobbyError, {
+        error: 'Lobby not found',
+        message: 'Aucune partie a été trouvée pour cette URL.',
+      });
+      throw new ServerException(SocketExceptions.LobbyError, 'Lobby not found');
+    }
+
+    lobby.deleteLobby(client);
+    this.lobbies.delete(lobbyId);
   }
 
   public renamePlayer(
@@ -84,8 +114,13 @@ export class LobbyManager {
   private lobbiesCleaner(): void {
     for (const [lobbyId, lobby] of this.lobbies) {
       const now = new Date().getTime();
-      const lobbyCreatedAt = lobby.createdAt.getTime();
-      const lobbyLifetime = now - lobbyCreatedAt;
+      const lobbyUpdatedAt = lobby.updatedAt.getTime();
+      const lobbyLifetime = now - lobbyUpdatedAt;
+
+      if (lobby.instance.gameState === GameState.GameDeleted) {
+        this.lobbies.delete(lobby.id);
+        return;
+      }
 
       if (lobbyLifetime > LOBBY_MAX_LIFETIME) {
         lobby.dispatchToLobby<ServerPayloads[ServerEvents.GameMessage]>(

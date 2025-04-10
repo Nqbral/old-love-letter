@@ -13,6 +13,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Hearts } from 'react-loader-spinner';
 
+import GameLobbyDelete from './GameLobbyDelete';
+
 export default function GameManager() {
   const router = useRouter();
   const { sm } = useSocketManager();
@@ -23,12 +25,16 @@ export default function GameManager() {
     gameState: GameState.InLobby,
     playersCount: 0,
     players: [],
-    scores: {},
     ownerName: '',
+    ownerId: '',
+    maxClients: 2,
   });
   const [lobbyError, setLobbyError] = useState<
     ServerPayloads[ServerEvents.LobbyError]
   >({ error: '', message: '' });
+  const [lobbyDelete, setLobbyDelete] = useState<
+    ServerPayloads[ServerEvents.LobbyDelete]
+  >({ message: '' });
   const [showJoinLobby, setShowJoinLobby] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
@@ -69,10 +75,15 @@ export default function GameManager() {
       setLobbyError(data);
     };
 
+    const onLobbyDelete: Listener<ServerPayloads[ServerEvents.LobbyDelete]> = (
+      data,
+    ) => {
+      setLobbyDelete(data);
+    };
+
     const onLobbyState: Listener<ServerPayloads[ServerEvents.LobbyState]> = (
       data,
     ) => {
-      console.log(data);
       setLobbyState(data);
     };
 
@@ -83,11 +94,13 @@ export default function GameManager() {
     };
 
     sm.registerListener(ServerEvents.LobbyError, onLobbyNotFound);
+    sm.registerListener(ServerEvents.LobbyDelete, onLobbyDelete);
     sm.registerListener(ServerEvents.LobbyState, onLobbyState);
     sm.registerListener(ServerEvents.GameMessage, onGameMessage);
 
     return () => {
       sm.removeListener(ServerEvents.LobbyError, onLobbyNotFound);
+      sm.removeListener(ServerEvents.LobbyDelete, onLobbyDelete);
       sm.removeListener(ServerEvents.LobbyState, onLobbyState);
       sm.removeListener(ServerEvents.GameMessage, onGameMessage);
     };
@@ -99,6 +112,10 @@ export default function GameManager() {
 
   if (lobbyError.error != '') {
     return <GameLobbyError error={lobbyError} />;
+  }
+
+  if (lobbyDelete.message != '') {
+    return <GameLobbyDelete data={lobbyDelete} />;
   }
 
   if (lobbyState.lobbyId != '') {

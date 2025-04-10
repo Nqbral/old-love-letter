@@ -1,6 +1,13 @@
 // REGEX RULES
-const REGEX_RULES = {
+export const REGEX_RULES = {
   ALPHAONLY_REGEX: /^[A-Za-z]+$/,
 };
 
-export default REGEX_RULES;
+export const PLAYER_COLORS = [
+  'text-yellow',
+  'text-red',
+  'text-blue',
+  'text-green',
+  'text-purple',
+  'text-pink',
+];

@@ -22,3 +22,8 @@ export class LobbyRenamePlayerDto {
   @IsString()
   playerName: string;
 }
+
+export class LobbyDeleteDto {
+  @IsString()
+  lobbyId: string;
+}

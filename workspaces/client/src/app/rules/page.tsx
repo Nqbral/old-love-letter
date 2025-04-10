@@ -11,8 +11,8 @@ import PriestImg from '../../../public/priest.png';
 import PrinceImg from '../../../public/prince.png';
 import PrincessImg from '../../../public/princess.png';
 import SpyImg from '../../../public/spy.png';
-import PreviousNavBar from '../components/PreviousNavBar';
 import LinkButton from '../components/buttons/LinkButton';
+import PreviousNavBar from '../components/navbar/PreviousNavBar';
 import CardDescription from '../components/rules/CardDescription';
 
 export default function Rules() {

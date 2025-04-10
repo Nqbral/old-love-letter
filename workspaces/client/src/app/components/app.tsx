@@ -17,11 +17,9 @@ export default function App({
 }>) {
   return (
     <SocketManagerProvider>
-      <SocketManagerProvider>
-        <html className={`${medievalsharp.className}`}>
-          <body>{children}</body>
-        </html>
-      </SocketManagerProvider>
+      <html className={`${medievalsharp.className}`}>
+        <body>{children}</body>
+      </html>
     </SocketManagerProvider>
   );
 }

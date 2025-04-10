@@ -1,7 +1,7 @@
-import PreviousNavBar from '@components/PreviousNavBar';
 import useSocketManager from '@components/hooks/useSocketManager';
 import LobbyCreation from '@components/lobby/LobbyCreation';
 import LobbyIntroduction from '@components/lobby/LobbyIntroduction';
+import PreviousNavBar from '@components/navbar/PreviousNavBar';
 import { Listener } from '@components/websocket/types';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';

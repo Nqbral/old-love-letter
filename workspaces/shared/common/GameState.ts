@@ -3,4 +3,5 @@ export enum GameState {
   GameStart = "game_start",
   GamePaused = "game_paused",
   GameFinished = "game_finished",
+  GameDeleted = "game_deleted",
 }

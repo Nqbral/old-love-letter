@@ -3,7 +3,7 @@ import SecondaryButton from '@components/buttons/SecondaryButton';
 import useSocketManager from '@components/hooks/useSocketManager';
 import { LobbyManagerState } from '@components/lobby/LobbyManager';
 import { ClientEvents } from '@love-letter/shared/client/ClientEvents';
-import REGEX_RULES from 'app/constants';
+import { REGEX_RULES } from 'app/constants';
 import { useState } from 'react';
 import { useEffect } from 'react';
 

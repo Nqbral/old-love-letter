@@ -22,3 +22,27 @@ html {
 input[type='number']::-webkit-inner-spin-button {
   opacity: 1;
 }
+
+.text-yellow {
+  color: #ffb300;
+}
+
+.text-red {
+  color: #e53935;
+}
+
+.text-blue {
+  color: #1e88e5;
+}
+
+.text-green {
+  color: #4caf50;
+}
+
+.text-purple {
+  color: #7e57c2;
+}
+
+.text-pink {
+  color: #f06292;
+}

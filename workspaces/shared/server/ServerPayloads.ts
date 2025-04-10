@@ -7,8 +7,9 @@ export type ServerPayloads = {
     gameState: GameState;
     playersCount: number;
     players: [string, string][];
-    scores: Record<string, number>;
+    ownerId: string;
     ownerName: string;
+    maxClients: number;
   };
 
   [ServerEvents.GameMessage]: {
@@ -17,6 +18,10 @@ export type ServerPayloads = {
 
   [ServerEvents.LobbyError]: {
     error: string;
+    message: string;
+  };
+
+  [ServerEvents.LobbyDelete]: {
     message: string;
   };
 

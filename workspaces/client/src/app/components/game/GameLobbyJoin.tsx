@@ -4,7 +4,8 @@ import useSocketManager from '@components/hooks/useSocketManager';
 import { ClientEvents } from '@love-letter/shared/client/ClientEvents';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';
-import REGEX_RULES from 'app/constants';
+import { REGEX_RULES } from 'app/constants';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 type Props = {
@@ -13,6 +14,7 @@ type Props = {
 
 export default function GameLobbyJoin({ lobbyState }: Props) {
   const { sm } = useSocketManager();
+  const router = useRouter();
 
   const [playerName, setPlayerName] = useState('');
   const [validName, setValidName] = useState(false);
@@ -21,6 +23,17 @@ export default function GameLobbyJoin({ lobbyState }: Props) {
   useEffect(() => {
     setValidName(REGEX_RULES.ALPHAONLY_REGEX.test(playerName));
   }, [playerName]);
+
+  const onLeaveLobby = () => {
+    sm.emit({
+      event: ClientEvents.LobbyLeave,
+      data: {
+        lobbyId: lobbyState?.lobbyId,
+      },
+    });
+
+    router.push('/lobby');
+  };
 
   const onJoinLobby = () => {
     setErrMsgName('');
@@ -70,7 +83,7 @@ export default function GameLobbyJoin({ lobbyState }: Props) {
           />
           <SecondaryButton
             buttonText="Quitter"
-            onClick={() => {}}
+            onClick={onLeaveLobby}
             disabled={false}
           />
         </div>

@@ -86,4 +86,14 @@ export class GameGateway implements OnGatewayConnection {
   ): void {
     this.lobbyManager.renamePlayer(data.lobbyId, client, data.playerName);
   }
+
+  @SubscribeMessage(ClientEvents.LobbyLeave)
+  onLeaveLobby(client: AuthenticatedSocket, data: LobbyRenamePlayerDto): void {
+    this.lobbyManager.leaveLobby(data.lobbyId, client);
+  }
+
+  @SubscribeMessage(ClientEvents.LobbyDelete)
+  onDeleteLobby(client: AuthenticatedSocket, data: LobbyRenamePlayerDto): void {
+    this.lobbyManager.deleteLobby(data.lobbyId, client);
+  }
 }
