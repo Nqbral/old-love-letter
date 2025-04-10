@@ -12,5 +12,7 @@ export enum ClientEvents {
   PlayerRename = "client.player.remame",
 
   // Game
+  StartGame = "client.game.start",
+  GetGameState = "client.game.get.state",
   GamePlayCard = "client.game.play_card",
 }

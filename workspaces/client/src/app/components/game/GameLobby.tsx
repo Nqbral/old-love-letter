@@ -18,6 +18,15 @@ export default function GameLobby({ lobbyState }: Props) {
   const router = useRouter();
   const isOwner = sm.getSocketId() === lobbyState?.ownerId;
 
+  const onStartGame = () => {
+    sm.emit({
+      event: ClientEvents.StartGame,
+      data: {
+        lobbyId: lobbyState?.lobbyId,
+      },
+    });
+  };
+
   const onDeleteLobby = () => {
     sm.emit({
       event: ClientEvents.LobbyDelete,
@@ -58,7 +67,7 @@ export default function GameLobby({ lobbyState }: Props) {
         {isOwner && (
           <PrimaryButton
             buttonText="Lancer la partie"
-            onClick={() => {}}
+            onClick={onStartGame}
             disabled={false}
           />
         )}

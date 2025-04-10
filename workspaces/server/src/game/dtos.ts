@@ -1,5 +1,6 @@
 import { IsInt, IsString, Max, Min } from 'class-validator';
 
+//Lobby
 export class LobbyCreateDto {
   @IsInt()
   @Min(2)
@@ -24,6 +25,12 @@ export class LobbyRenamePlayerDto {
 }
 
 export class LobbyDeleteDto {
+  @IsString()
+  lobbyId: string;
+}
+
+//Game
+export class StartGameDto {
   @IsString()
   lobbyId: string;
 }

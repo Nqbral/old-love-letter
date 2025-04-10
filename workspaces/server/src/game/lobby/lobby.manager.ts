@@ -109,6 +109,20 @@ export class LobbyManager {
     lobby.addPlayerName(client, playerName);
   }
 
+  public startGame(lobbyId: string, client: AuthenticatedSocket): void {
+    const lobby = this.lobbies.get(lobbyId);
+
+    if (!lobby) {
+      this.server.to(client.id).emit(ServerEvents.LobbyError, {
+        error: 'Lobby not found',
+        message: 'Aucune partie a été trouvée pour cette URL.',
+      });
+      throw new ServerException(SocketExceptions.LobbyError, 'Lobby not found');
+    }
+
+    lobby.instance.triggerStart(client);
+  }
+
   // Periodically clean up lobbies
   @Cron('*/5 * * * *')
   private lobbiesCleaner(): void {

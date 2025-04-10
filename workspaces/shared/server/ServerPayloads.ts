@@ -1,7 +1,9 @@
+import { Cards } from "../common/Cards";
 import { GameState } from "../common/GameState";
 import { ServerEvents } from "./ServerEvents";
 
 export type ServerPayloads = {
+  // Lobby
   [ServerEvents.LobbyState]: {
     lobbyId: string;
     gameState: GameState;
@@ -10,10 +12,6 @@ export type ServerPayloads = {
     ownerId: string;
     ownerName: string;
     maxClients: number;
-  };
-
-  [ServerEvents.GameMessage]: {
-    message: string;
   };
 
   [ServerEvents.LobbyError]: {
@@ -26,4 +24,18 @@ export type ServerPayloads = {
   };
 
   [ServerEvents.Pong]: {};
+
+  // Game
+  [ServerEvents.GameMessage]: {
+    message: string;
+  };
+
+  [ServerEvents.GameState]: {
+    lobbyId: string;
+    players: [string, string][];
+    playersCard: [string, Cards[]][];
+    discardedCard: string;
+    lastPlayedCard: string;
+    playerTurn: string;
+  };
 };

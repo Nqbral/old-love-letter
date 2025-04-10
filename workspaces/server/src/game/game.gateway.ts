@@ -96,4 +96,9 @@ export class GameGateway implements OnGatewayConnection {
   onDeleteLobby(client: AuthenticatedSocket, data: LobbyRenamePlayerDto): void {
     this.lobbyManager.deleteLobby(data.lobbyId, client);
   }
+
+  @SubscribeMessage(ClientEvents.StartGame)
+  onStartGame(client: AuthenticatedSocket, data: LobbyRenamePlayerDto): void {
+    this.lobbyManager.startGame(data.lobbyId, client);
+  }
 }

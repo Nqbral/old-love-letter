@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Hearts } from 'react-loader-spinner';
 
+import Game from './Game';
 import GameLobbyDelete from './GameLobbyDelete';
 
 export default function GameManager() {
@@ -28,6 +29,16 @@ export default function GameManager() {
     ownerName: '',
     ownerId: '',
     maxClients: 2,
+  });
+  const [gameState, setGameState] = useState<
+    ServerPayloads[ServerEvents.GameState]
+  >({
+    lobbyId: '',
+    players: [],
+    playersCard: [],
+    discardedCard: '',
+    lastPlayedCard: '',
+    playerTurn: '',
   });
   const [lobbyError, setLobbyError] = useState<
     ServerPayloads[ServerEvents.LobbyError]
@@ -87,6 +98,13 @@ export default function GameManager() {
       setLobbyState(data);
     };
 
+    const onGameState: Listener<ServerPayloads[ServerEvents.GameState]> = (
+      data,
+    ) => {
+      console.log(data);
+      setGameState(data);
+    };
+
     const onGameMessage: Listener<ServerPayloads[ServerEvents.GameMessage]> = ({
       message,
     }) => {
@@ -96,12 +114,14 @@ export default function GameManager() {
     sm.registerListener(ServerEvents.LobbyError, onLobbyNotFound);
     sm.registerListener(ServerEvents.LobbyDelete, onLobbyDelete);
     sm.registerListener(ServerEvents.LobbyState, onLobbyState);
+    sm.registerListener(ServerEvents.GameState, onGameState);
     sm.registerListener(ServerEvents.GameMessage, onGameMessage);
 
     return () => {
       sm.removeListener(ServerEvents.LobbyError, onLobbyNotFound);
       sm.removeListener(ServerEvents.LobbyDelete, onLobbyDelete);
       sm.removeListener(ServerEvents.LobbyState, onLobbyState);
+      sm.removeListener(ServerEvents.GameState, onGameState);
       sm.removeListener(ServerEvents.GameMessage, onGameMessage);
     };
   }, []);
@@ -122,7 +142,11 @@ export default function GameManager() {
     if (showJoinLobby) {
       return <GameLobbyJoin lobbyState={lobbyState} />;
     }
-    return <GameLobby lobbyState={lobbyState} />;
+    if (lobbyState.gameState == GameState.InLobby) {
+      return <GameLobby lobbyState={lobbyState} />;
+    }
+
+    return <Game gameState={gameState} />;
   }
 
   return (

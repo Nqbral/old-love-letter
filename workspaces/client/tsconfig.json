@@ -22,7 +22,8 @@
       "@hooks/*": ["hooks/*"],
       "@styles/*": ["styles/*"],
       "@utils/*": ["utils/*"],
-      "@icons/*": ["icons/*"]
+      "@icons/*": ["icons/*"],
+      "@public/*": ["../public/*"]
     },
     "plugins": [
       {

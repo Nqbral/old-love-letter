@@ -8,6 +8,7 @@ export enum ServerEvents {
 
   // Game
   GameMessage = "server.game.message",
+  GameState = "server.game.state",
 
   // Exceptions
   LobbyError = "server.lobby.error",
