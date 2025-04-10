@@ -19,10 +19,7 @@ export class Instance {
   }
 
   public triggerStart(): void {
-    if (
-      this.gameState == GameState.GameStart ||
-      this.gameState == GameState.GamePaused
-    ) {
+    if (this.gameState == GameState.GameStart) {
       return;
     }
 

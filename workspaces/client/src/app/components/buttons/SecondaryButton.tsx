@@ -13,7 +13,7 @@ export default function SecondaryButton({
 }: Props) {
   return (
     <button
-      className="button border-secondary hover:border-secondary-hover my-1 min-w-48 rounded-md border-2 px-6 py-2 transition-colors"
+      className="button border-secondary hover:border-secondary-hover my-1 max-w-64 min-w-48 rounded-md border-2 px-6 py-2 transition-colors"
       onClick={onClick}
       disabled={disabled}
     >

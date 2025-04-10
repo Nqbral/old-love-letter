@@ -3,7 +3,6 @@ import { ClientEvents } from '@love-letter/shared/client/ClientEvents';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerExceptionResponse } from '@love-letter/shared/server/types';
 import { io, Socket } from 'socket.io-client';
-import { showNotification } from '@mantine/notifications';
 
 type EmitOptions<T> = {
   event: ClientEvents;
@@ -65,12 +64,7 @@ export default class SocketManager {
   private onConnect(): void {
     this.socket.on('connect', () => {
       if (this.connectionLost) {
-        showNotification({
-          message: 'Reconnected to server!',
-          color: 'green',
-          autoClose: 2000,
-        });
-        this.connectionLost = false;
+        console.log('Reconnected to server!');
       }
     });
   }
@@ -78,19 +72,11 @@ export default class SocketManager {
   private onDisconnect(): void {
     this.socket.on('disconnect', async (reason: Socket.DisconnectReason) => {
       if (reason === 'io client disconnect') {
-        showNotification({
-          message: 'Disconnected successfully!',
-          color: 'green',
-          autoClose: 2000,
-        });
+        console.log('Disconnected succesfully!');
       }
 
       if (reason === 'io server disconnect') {
-        showNotification({
-          message: 'You got disconnect by server',
-          color: 'orange',
-          autoClose: 3000,
-        });
+        console.log('You got disconnect by server');
       }
 
       if (
@@ -98,11 +84,7 @@ export default class SocketManager {
         reason === 'transport close' ||
         reason === 'transport error'
       ) {
-        showNotification({
-          message: 'Connection lost to the server',
-          color: 'orange',
-          autoClose: 3000,
-        });
+        console.log('Connection lost to the server');
         this.connectionLost = true;
       }
     });
@@ -111,10 +93,7 @@ export default class SocketManager {
   private onException(): void {
     this.socket.on('exception', (data: ServerExceptionResponse) => {
       if (typeof data.exception === 'undefined') {
-        showNotification({
-          message: 'Unexpected error from server',
-          color: 'red',
-        });
+        console.log('Unexpected error from server');
 
         return;
       }
@@ -129,10 +108,7 @@ export default class SocketManager {
         }
       }
 
-      showNotification({
-        message: body,
-        color: 'red',
-      });
+      console.log(body);
     });
   }
 }
