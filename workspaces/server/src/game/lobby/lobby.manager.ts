@@ -28,9 +28,9 @@ export class LobbyManager {
   public createLobby(
     nbPlayers: number,
     owner: AuthenticatedSocket,
-    namePlayer: string,
+    lobbyName: string,
   ): Lobby {
-    const lobby = new Lobby(this.server, nbPlayers, owner, namePlayer);
+    const lobby = new Lobby(this.server, nbPlayers, owner, lobbyName);
 
     this.lobbies.set(lobby.id, lobby);
 

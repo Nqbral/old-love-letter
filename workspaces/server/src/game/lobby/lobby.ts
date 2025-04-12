@@ -2,6 +2,9 @@ import { Instance } from '@app/game/instance/instance';
 import { ServerException } from '@app/game/server.exception';
 import { AuthenticatedSocket } from '@app/game/types';
 import { GameState } from '@shared/common/GameState';
+import { replacer } from '@shared/common/JsonHelper';
+import { PlayerLobby } from '@shared/common/Player';
+import { PLAYER_COLORS } from '@shared/common/PlayerColor';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
 import { SocketExceptions } from '@shared/server/SocketExceptions';
@@ -18,7 +21,10 @@ export class Lobby {
     AuthenticatedSocket
   >();
 
-  public players: Map<Socket['id'], string> = new Map<Socket['id'], string>();
+  public players: Map<Socket['id'], PlayerLobby> = new Map<
+    Socket['id'],
+    PlayerLobby
+  >();
 
   public readonly instance: Instance = new Instance(this);
 
@@ -28,14 +34,12 @@ export class Lobby {
     private readonly server: Server,
     public readonly maxClients: number,
     public readonly owner: AuthenticatedSocket,
-    ownername: string,
-  ) {
-    this.ownerName = ownername;
-    this.players.set(owner.id, ownername);
-  }
+    public readonly lobbyName: string,
+  ) {}
 
   public addClient(client: AuthenticatedSocket): void {
     this.clients.set(client.id, client);
+
     client.join(this.id);
     client.data.lobby = this;
 
@@ -43,7 +47,17 @@ export class Lobby {
   }
 
   public addPlayerName(client: AuthenticatedSocket, playerName: string): void {
-    this.players.set(client.id, playerName);
+    let player = this.players.get(client.id);
+
+    this.players.set(client.id, {
+      id: client.id,
+      playerName: playerName,
+      color: PLAYER_COLORS[Array.from(this.players.keys()).length],
+    });
+
+    if (player != null) {
+      this.players.set(client.id, player);
+    }
     client.data.lobby = this;
 
     this.dispatchLobbyState();
@@ -86,9 +100,10 @@ export class Lobby {
     this.updatedAt = new Date();
     const payload: ServerPayloads[ServerEvents.LobbyState] = {
       lobbyId: this.id,
+      lobbyName: this.lobbyName,
       gameState: this.instance.gameState,
       playersCount: this.clients.size,
-      players: Array.from(this.players.entries()),
+      players: JSON.stringify(this.players, replacer),
       ownerName: this.ownerName,
       ownerId: this.owner.id,
       maxClients: this.maxClients,

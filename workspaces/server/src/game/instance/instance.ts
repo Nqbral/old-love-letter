@@ -25,6 +25,11 @@ export class Instance {
     Cards[]
   >();
 
+  public playersActiveCard: Map<Socket['id'], Cards[]> = new Map<
+    Socket['id'],
+    Cards[]
+  >();
+
   public discardedCard: Cards;
 
   public lastPlayedCard: Cards;
@@ -89,6 +94,7 @@ export class Instance {
     // Discard one card
     this.deck.pop();
 
+    // Give each player one card
     this.lobby.players.forEach((playerName, socketId) => {
       let card = this.deck.pop();
 
@@ -98,6 +104,7 @@ export class Instance {
     });
   }
 
+  // Set the turn on one of the player randomly (at start game only)
   private setRandomTurn(): void {
     const arr = Array.from(this.lobby.players.keys());
     this.playerTurn = arr[Math.floor(Math.random() * arr.length)];
@@ -111,7 +118,7 @@ export class Instance {
       playersCard: Array.from(this.playersCard.entries()),
       discardedCard: this.discardedCard,
       lastPlayedCard: this.lastPlayedCard,
-      playerTurn: 'test',
+      playerTurn: this.playerTurn,
     };
 
     this.lobby.dispatchToLobby(ServerEvents.GameState, payload);

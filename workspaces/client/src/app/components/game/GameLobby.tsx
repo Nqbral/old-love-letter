@@ -5,6 +5,7 @@ import SecondaryButton from '@components/buttons/SecondaryButton';
 import GamePlayerLobby from '@components/game/list_tiles/GamePlayerLobby';
 import useSocketManager from '@components/hooks/useSocketManager';
 import { ClientEvents } from '@love-letter/shared/client/ClientEvents';
+import { reviver } from '@love-letter/shared/common/JsonHelper';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';
 import { useRouter } from 'next/navigation';
@@ -17,6 +18,11 @@ export default function GameLobby({ lobbyState }: Props) {
   const { sm } = useSocketManager();
   const router = useRouter();
   const isOwner = sm.getSocketId() === lobbyState?.ownerId;
+  let playersParsed = new Map();
+
+  if (lobbyState?.players != null) {
+    playersParsed = JSON.parse(lobbyState.players, reviver);
+  }
 
   const onStartGame = () => {
     sm.emit({
@@ -49,17 +55,15 @@ export default function GameLobby({ lobbyState }: Props) {
 
   return (
     <div className="flex flex-col items-center justify-center gap-6">
-      <h1 className="text-primary text-4xl">
-        Lobby de {lobbyState?.ownerName}
-      </h1>
+      <h1 className="text-primary text-4xl">Lobby "{lobbyState?.lobbyName}"</h1>
       <p className="italic">
         Nombre de joueurs requis : {lobbyState?.maxClients}
       </p>
       <div className="flex w-100 flex-col items-center justify-center gap-2 border-1 border-slate-700 py-4">
         <h2 className="mb-2 text-lg">Liste des joueurs</h2>
-        {lobbyState?.players.map((player, index) => {
+        {Array.from(playersParsed).map((player, index) => {
           return (
-            <GamePlayerLobby key={index} playerName={player[1]} index={index} />
+            <GamePlayerLobby key={index} player={player[1]} index={index} />
           );
         })}
       </div>

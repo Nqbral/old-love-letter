@@ -8,7 +8,7 @@ export class LobbyCreateDto {
   nbPlayers: number;
 
   @IsString()
-  playerName: string;
+  lobbyName: string;
 }
 
 export class LobbyJoinDto {

@@ -7,6 +7,7 @@ import useSocketManager from '@components/hooks/useSocketManager';
 import { Listener } from '@components/websocket/types';
 import { ClientEvents } from '@love-letter/shared/client/ClientEvents';
 import { GameState } from '@love-letter/shared/common/GameState';
+import { reviver } from '@love-letter/shared/common/JsonHelper';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -23,9 +24,10 @@ export default function GameManager() {
     ServerPayloads[ServerEvents.LobbyState]
   >({
     lobbyId: '',
+    lobbyName: '',
     gameState: GameState.InLobby,
     playersCount: 0,
-    players: [],
+    players: '',
     ownerName: '',
     ownerId: '',
     maxClients: 2,
@@ -50,18 +52,22 @@ export default function GameManager() {
 
   const searchParams = useSearchParams();
 
-  const findSocketIdInPlayers = () => {
+  const isPlayerNamed = () => {
     const socketId = sm.getSocketId();
+    if (lobbyState.players == '') {
+      return;
+    }
+    const playersParsed = JSON.parse(lobbyState.players, reviver);
 
-    let foundSocket = false;
-
-    for (let i = 0; i < lobbyState.players.length; i++) {
-      if (lobbyState.players[i][0] == socketId) {
-        foundSocket = true;
+    if (socketId != null) {
+      const player = playersParsed.get(socketId);
+      if (player == null || player['playerName'] == '') {
+        setShowJoinLobby(true);
+        return;
       }
     }
 
-    setShowJoinLobby(!foundSocket);
+    setShowJoinLobby(false);
   };
 
   useEffect(() => {
@@ -101,7 +107,6 @@ export default function GameManager() {
     const onGameState: Listener<ServerPayloads[ServerEvents.GameState]> = (
       data,
     ) => {
-      console.log(data);
       setGameState(data);
     };
 
@@ -127,7 +132,7 @@ export default function GameManager() {
   }, []);
 
   useEffect(() => {
-    findSocketIdInPlayers();
+    isPlayerNamed();
   }, [lobbyState]);
 
   if (lobbyError.error != '') {

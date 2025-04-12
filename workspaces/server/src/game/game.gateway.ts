@@ -62,7 +62,7 @@ export class GameGateway implements OnGatewayConnection {
     const lobby = this.lobbyManager.createLobby(
       data.nbPlayers,
       client,
-      data.playerName,
+      data.lobbyName,
     );
     lobby.addClient(client);
 

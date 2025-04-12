@@ -51,13 +51,15 @@ export default function GameLobbyJoin({ lobbyState }: Props) {
     });
   };
 
+  console.log(lobbyState);
+
   return (
     <div className="flex flex-col items-center justify-center gap-6">
       <h1 className="text-primary text-4xl">Rejoindre le lobby</h1>
       <div className="flex flex-col items-center justify-center gap-4">
         <p>
-          Vous êtes en train de rejoindre le lobby de{' '}
-          <span className="font-bold">{lobbyState?.ownerName}</span>.
+          Vous êtes en train de rejoindre le lobby nommé{' '}
+          <span className="font-bold">{lobbyState?.lobbyName}</span>.
         </p>
         <p className="mb-4">Veuillez saisir votre pseudo</p>
         <input

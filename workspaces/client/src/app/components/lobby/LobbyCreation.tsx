@@ -15,21 +15,18 @@ export default function LobbyCreation({ setLobbyManagerState }: Props) {
   const { sm } = useSocketManager();
 
   const [nbPlayers, setNbPlayers] = useState(2);
-  const [playerName, setPlayerName] = useState('');
+  const [lobbyName, setLobbyName] = useState('');
   const [validName, setValidName] = useState(false);
   const [errMsgName, setErrMsgName] = useState('');
 
   const backToIntroduction = () => {
     setNbPlayers(2);
-    setPlayerName('');
-    setErrMsgName('');
-    setValidName(false);
     setLobbyManagerState(LobbyManagerState.LobbyIntroduction);
   };
 
   useEffect(() => {
-    setValidName(REGEX_RULES.ALPHAONLY_REGEX.test(playerName));
-  }, [playerName]);
+    setValidName(REGEX_RULES.ALPHAONLY_REGEX.test(lobbyName));
+  }, [lobbyName]);
 
   const onCreateLobby = () => {
     setErrMsgName('');
@@ -42,7 +39,7 @@ export default function LobbyCreation({ setLobbyManagerState }: Props) {
       event: ClientEvents.LobbyCreate,
       data: {
         nbPlayers: nbPlayers,
-        playerName: playerName,
+        lobbyName: lobbyName,
       },
     });
   };
@@ -69,13 +66,14 @@ export default function LobbyCreation({ setLobbyManagerState }: Props) {
         >
           {errMsgName}
         </p>
-        <label htmlFor="player_name">Pseudo</label>
+        <label htmlFor="lobby_name">Nom du lobby</label>
         <input
           type="text"
-          name="player_name"
+          name="lobby_name"
           required
-          defaultValue={playerName}
-          onChange={(event) => setPlayerName(event.target.value)}
+          defaultValue={lobbyName}
+          onChange={(event) => setLobbyName(event.target.value)}
+          placeholder="Nom du lobby"
           className="focus:border-primary-hover hover:border-primary-hover w-52 border-b-1 border-neutral-300 text-center transition-colors duration-300 outline-none"
         />
         <div className="flex flex-row gap-12">
