@@ -36,11 +36,12 @@ export default function GameManager() {
     ServerPayloads[ServerEvents.GameState]
   >({
     lobbyId: '',
-    players: [],
-    playersCard: [],
+    players: '',
     discardedCard: '',
     lastPlayedCard: '',
     playerTurn: '',
+    playersTurnOrder: [],
+    deck: [],
   });
   const [lobbyError, setLobbyError] = useState<
     ServerPayloads[ServerEvents.LobbyError]

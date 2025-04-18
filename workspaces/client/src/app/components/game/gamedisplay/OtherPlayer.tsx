@@ -1,18 +1,33 @@
 import { faCoins } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { PlayerGame } from '@love-letter/shared/common/Player';
 import BackCard from '@public/backcard.png';
 import Image from 'next/image';
 
-export default function OtherPlayer() {
+type Props = {
+  player: PlayerGame;
+};
+
+export default function OtherPlayer({ player }: Props) {
   return (
     <div className="flex flex-col items-center gap-4">
-      <div>OtherPlayer</div>
+      <div className="h-32 w-24 rounded-sm border-1 border-dashed border-slate-700"></div>
       <div className="flex flex-row gap-2">
-        <div>0</div>
+        <div>{player.score}</div>
         <FontAwesomeIcon icon={faCoins} color="oklch(92.4% 0.12 95.746)" />
+        <div className={player.color}>{player.playerName}</div>
       </div>
-      <div className="w-40">
-        <Image src={BackCard} alt="player_card" />
+      <div className="flex flex-row items-center gap-2">
+        {player.cards.map((card) => {
+          return (
+            <Image
+              key={card}
+              className="w-24"
+              src={BackCard}
+              alt="player_card"
+            />
+          );
+        })}
       </div>
     </div>
   );

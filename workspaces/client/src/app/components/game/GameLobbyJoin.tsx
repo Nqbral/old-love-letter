@@ -51,8 +51,6 @@ export default function GameLobbyJoin({ lobbyState }: Props) {
     });
   };
 
-  console.log(lobbyState);
-
   return (
     <div className="flex flex-col items-center justify-center gap-6">
       <h1 className="text-primary text-4xl">Rejoindre le lobby</h1>

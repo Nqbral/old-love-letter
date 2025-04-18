@@ -3,6 +3,7 @@ import { Lobby } from '@app/game/lobby/lobby';
 import { ServerException } from '@app/game/server.exception';
 import { AuthenticatedSocket } from '@app/game/types';
 import { Cron } from '@nestjs/schedule';
+import { Cards } from '@shared/common/Cards';
 import { GameState } from '@shared/common/GameState';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
@@ -37,7 +38,7 @@ export class LobbyManager {
     return lobby;
   }
 
-  public joinLobby(lobbyId: string, client: AuthenticatedSocket): void {
+  protected getLobby(lobbyId: string, client: AuthenticatedSocket): Lobby {
     const lobby = this.lobbies.get(lobbyId);
 
     if (!lobby || lobby.instance.gameState === GameState.GameDeleted) {
@@ -47,6 +48,12 @@ export class LobbyManager {
       });
       throw new ServerException(SocketExceptions.LobbyError, 'Lobby not found');
     }
+
+    return lobby;
+  }
+
+  public joinLobby(lobbyId: string, client: AuthenticatedSocket): void {
+    const lobby = this.getLobby(lobbyId, client);
 
     if (lobby.clients.size >= lobby.maxClients) {
       this.server.to(client.id).emit(ServerEvents.LobbyError, {
@@ -63,29 +70,13 @@ export class LobbyManager {
   }
 
   public leaveLobby(lobbyId: string, client: AuthenticatedSocket): void {
-    const lobby = this.lobbies.get(lobbyId);
-
-    if (!lobby) {
-      this.server.to(client.id).emit(ServerEvents.LobbyError, {
-        error: 'Lobby not found',
-        message: 'Aucune partie a été trouvée pour cette URL.',
-      });
-      throw new ServerException(SocketExceptions.LobbyError, 'Lobby not found');
-    }
+    const lobby = this.getLobby(lobbyId, client);
 
     lobby.leaveLobby(client);
   }
 
   public deleteLobby(lobbyId: string, client: AuthenticatedSocket): void {
-    const lobby = this.lobbies.get(lobbyId);
-
-    if (!lobby) {
-      this.server.to(client.id).emit(ServerEvents.LobbyError, {
-        error: 'Lobby not found',
-        message: 'Aucune partie a été trouvée pour cette URL.',
-      });
-      throw new ServerException(SocketExceptions.LobbyError, 'Lobby not found');
-    }
+    const lobby = this.getLobby(lobbyId, client);
 
     lobby.deleteLobby(client);
     this.lobbies.delete(lobbyId);
@@ -96,31 +87,23 @@ export class LobbyManager {
     client: AuthenticatedSocket,
     playerName: string,
   ): void {
-    const lobby = this.lobbies.get(lobbyId);
-
-    if (!lobby) {
-      this.server.to(client.id).emit(ServerEvents.LobbyError, {
-        error: 'Lobby not found',
-        message: 'Aucune partie a été trouvée pour cette URL.',
-      });
-      throw new ServerException(SocketExceptions.LobbyError, 'Lobby not found');
-    }
+    const lobby = this.getLobby(lobbyId, client);
 
     lobby.addPlayerName(client, playerName);
   }
 
   public startGame(lobbyId: string, client: AuthenticatedSocket): void {
-    const lobby = this.lobbies.get(lobbyId);
-
-    if (!lobby) {
-      this.server.to(client.id).emit(ServerEvents.LobbyError, {
-        error: 'Lobby not found',
-        message: 'Aucune partie a été trouvée pour cette URL.',
-      });
-      throw new ServerException(SocketExceptions.LobbyError, 'Lobby not found');
-    }
+    const lobby = this.getLobby(lobbyId, client);
 
     lobby.instance.triggerStart(client);
+  }
+
+  public playCard(
+    lobbyId: string,
+    card: Cards,
+    client: AuthenticatedSocket,
+  ): void {
+    const lobby = this.getLobby(lobbyId, client);
   }
 
   // Periodically clean up lobbies

@@ -3,6 +3,8 @@ import { ServerException } from '@app/game/server.exception';
 import { AuthenticatedSocket } from '@app/game/types';
 import { Cards, CardsNumber } from '@shared/common/Cards';
 import { GameState } from '@shared/common/GameState';
+import { replacer } from '@shared/common/JsonHelper';
+import { PlayerGame } from '@shared/common/Player';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
 import { SocketExceptions } from '@shared/server/SocketExceptions';
@@ -20,15 +22,17 @@ export class Instance {
 
   public playerTurn: Socket['id'];
 
-  public playersCard: Map<Socket['id'], Cards[]> = new Map<
+  public players: Map<Socket['id'], PlayerGame> = new Map<
     Socket['id'],
-    Cards[]
+    PlayerGame
   >();
 
   public playersActiveCard: Map<Socket['id'], Cards[]> = new Map<
     Socket['id'],
     Cards[]
   >();
+
+  public playersTurnOrder: Socket['id'][] = [];
 
   public discardedCard: Cards;
 
@@ -59,8 +63,11 @@ export class Instance {
 
     this.gameState = GameState.GameStart;
 
+    this.initPlayers();
     this.initializeCards();
+    this.initializeTurns();
     this.setRandomTurn();
+    this.playerDrawCard();
 
     this.lobby.dispatchLobbyState();
     this.dispatchGameState();
@@ -95,13 +102,33 @@ export class Instance {
     this.deck.pop();
 
     // Give each player one card
-    this.lobby.players.forEach((playerName, socketId) => {
+    this.players.forEach((playerGame, socketId) => {
       let card = this.deck.pop();
+      let player = this.players.get(socketId);
 
-      if (card !== undefined) {
-        this.playersCard.set(socketId, [card]);
+      if (player != null && card != undefined) {
+        player.cards = [card];
       }
     });
+  }
+
+  private initPlayers(): void {
+    this.lobby.players.forEach((value, key) => {
+      this.players.set(key, {
+        id: value.id,
+        color: value.color,
+        playerName: value.playerName,
+        score: 0,
+        cards: [],
+        activeCards: [],
+      });
+    });
+  }
+
+  private initializeTurns(): void {
+    this.playersTurnOrder = Array.from(this.players.keys()).sort(
+      (a, b) => 0.5 - Math.random(),
+    );
   }
 
   // Set the turn on one of the player randomly (at start game only)
@@ -110,15 +137,29 @@ export class Instance {
     this.playerTurn = arr[Math.floor(Math.random() * arr.length)];
   }
 
+  private playerDrawCard() {
+    if (this.deck.length == 0) {
+      return;
+    }
+    let player = this.players.get(this.playerTurn);
+    if (player != null) {
+      let card = this.deck.pop();
+      if (card != undefined) {
+        player.cards.push(card);
+      }
+    }
+  }
+
   public dispatchGameState(): void {
     this.lobby.updatedAt = new Date();
     const payload: ServerPayloads[ServerEvents.GameState] = {
       lobbyId: this.lobby.id,
-      players: Array.from(this.lobby.players.entries()),
-      playersCard: Array.from(this.playersCard.entries()),
+      players: JSON.stringify(this.players, replacer),
       discardedCard: this.discardedCard,
       lastPlayedCard: this.lastPlayedCard,
       playerTurn: this.playerTurn,
+      playersTurnOrder: this.playersTurnOrder,
+      deck: this.deck,
     };
 
     this.lobby.dispatchToLobby(ServerEvents.GameState, payload);

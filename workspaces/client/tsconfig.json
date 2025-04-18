@@ -23,7 +23,8 @@
       "@styles/*": ["styles/*"],
       "@utils/*": ["utils/*"],
       "@icons/*": ["icons/*"],
-      "@public/*": ["../public/*"]
+      "@public/*": ["../public/*"],
+      "@shared/*": ["../../shared/*"]
     },
     "plugins": [
       {

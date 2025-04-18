@@ -21,7 +21,10 @@ export default function Home() {
       </div>
       <div className="flex flex-row items-center gap-2">
         <FontAwesomeIcon icon={faComputer} height={30} color="#8d9eaa" />
-        <p>Pour une expérience optimale, jouer sur un ordinateur</p>
+        <p>
+          Pour une expérience optimale, jouer sur un ordinateur en plein écran
+          (F11)
+        </p>
       </div>
     </div>
   );

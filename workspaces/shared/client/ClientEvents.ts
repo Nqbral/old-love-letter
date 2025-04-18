@@ -14,5 +14,14 @@ export enum ClientEvents {
   // Game
   StartGame = "client.game.start",
   GetGameState = "client.game.get.state",
-  GamePlayCard = "client.game.play_card",
+  GamePlaySpy = "client.game.play_spy",
+  GamePlayGuard = "client.game.play_guard",
+  GamePlayPriest = "client.game.play_priest",
+  GamePlayBaron = "client.game.play_baron",
+  GamePlayHandmaid = "client.game.play_handmaid",
+  GamePlayPrince = "client.game.play_prince",
+  GamePlayChancellor = "client.game.play_chancellor",
+  GamePlayKing = "client.game.play_king",
+  GamePlayCountess = "client.game.play_countess",
+  GamePlayPrincess = "client.game.play_princess",
 }

@@ -1,17 +1,23 @@
 import BackCard from '@public/backcard.png';
-import Handmaid from '@public/handmaid.png';
+import { ServerEvents } from '@shared/server/ServerEvents';
+import { ServerPayloads } from '@shared/server/ServerPayloads';
 import Image from 'next/image';
 
-export default function Deck() {
+type Props = {
+  gameState: ServerPayloads[ServerEvents.GameState];
+};
+
+export default function Deck({ gameState }: Props) {
   return (
     <div className="flex flex-row gap-6">
-      <div className="flex w-40 flex-col items-center gap-4">
-        <div>Pioche (20)</div>
+      <div className="flex w-24 flex-col items-center gap-4">
+        <div>Pioche ({gameState.deck.length})</div>
         <Image src={BackCard} alt="deck" />
       </div>
-      <div className="flex w-40 flex-col items-center gap-4">
+      <div className="flex w-24 flex-col items-center gap-4">
         <div>Défausse</div>
-        <Image src={Handmaid} alt="discard" />
+        <div className="h-full w-24 rounded-sm border-1 border-dashed border-slate-700"></div>
+        {/* <Image src={Handmaid} alt="discard" /> */}
       </div>
     </div>
   );

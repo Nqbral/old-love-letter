@@ -34,10 +34,11 @@ export type ServerPayloads = {
 
   [ServerEvents.GameState]: {
     lobbyId: string;
-    players: [string, PlayerLobby][];
-    playersCard: [string, Cards[]][];
+    players: string;
     discardedCard: string;
     lastPlayedCard: string;
     playerTurn: string;
+    playersTurnOrder: string[];
+    deck: Cards[];
   };
 };

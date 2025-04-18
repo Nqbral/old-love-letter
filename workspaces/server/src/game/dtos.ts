@@ -34,3 +34,8 @@ export class StartGameDto {
   @IsString()
   lobbyId: string;
 }
+
+export class PlayCardGameDto {
+  @IsString()
+  lobbyId: string;
+}

@@ -46,3 +46,8 @@ input[type='number']::-webkit-inner-spin-button {
 .text-pink {
   color: #f06292;
 }
+
+:root {
+  --toastify-color-light: #15224c;
+  --toastify-text-color-light: #fff;
+}
