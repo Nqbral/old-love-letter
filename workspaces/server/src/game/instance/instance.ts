@@ -206,17 +206,26 @@ export class Instance {
     let indexCurrentPlayer = this.playersTurnOrder.findIndex((value) => {
       return value == this.playerTurn;
     });
-    let nextPlayer = 0;
 
     if (indexCurrentPlayer != -1) {
-      nextPlayer = indexCurrentPlayer + 1;
+      let nextPlayer = indexCurrentPlayer;
+      let playerFound = false;
+      let player;
 
-      if (indexCurrentPlayer == this.playersTurnOrder.length - 1) {
-        nextPlayer = 0;
+      while (!playerFound) {
+        nextPlayer++;
+
+        if (nextPlayer > this.playersTurnOrder.length) {
+          nextPlayer = 0;
+        }
+
+        player = this.players.get(this.playersTurnOrder[nextPlayer]);
+
+        if (player != null && player.alive === true) {
+          this.playerTurn = this.playersTurnOrder[nextPlayer];
+          playerFound = true;
+        }
       }
-
-      this.playerTurn = this.playersTurnOrder[nextPlayer];
-      return;
     }
   }
 
