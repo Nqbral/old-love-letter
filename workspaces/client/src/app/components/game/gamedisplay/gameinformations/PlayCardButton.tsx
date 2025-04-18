@@ -1,5 +1,7 @@
 import CustomNotification from '@components/notifications/CustomNotification';
 import { Cards } from '@shared/common/Cards';
+import { ServerEvents } from '@shared/server/ServerEvents';
+import { ServerPayloads } from '@shared/server/ServerPayloads';
 import { toast } from 'react-toastify';
 
 import PlayBaronButton from './PlayCardButtons/PlayBaronButton';
@@ -17,9 +19,15 @@ type Props = {
   card: Cards;
   primary: boolean;
   disabled: boolean;
+  gameState: ServerPayloads[ServerEvents.GameState];
 };
 
-export default function PlayCardButton({ card, primary, disabled }: Props) {
+export default function PlayCardButton({
+  card,
+  primary,
+  disabled,
+  gameState,
+}: Props) {
   const showNotYourTurn = () => {
     toast(CustomNotification, {
       data: {
@@ -41,6 +49,7 @@ export default function PlayCardButton({ card, primary, disabled }: Props) {
           primary={primary}
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
+          gameState={gameState}
         />
       );
     case Cards.Guard:
@@ -49,6 +58,7 @@ export default function PlayCardButton({ card, primary, disabled }: Props) {
           primary={primary}
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
+          gameState={gameState}
         />
       );
     case Cards.Priest:
@@ -57,6 +67,7 @@ export default function PlayCardButton({ card, primary, disabled }: Props) {
           primary={primary}
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
+          gameState={gameState}
         />
       );
     case Cards.Baron:
@@ -65,6 +76,7 @@ export default function PlayCardButton({ card, primary, disabled }: Props) {
           primary={primary}
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
+          gameState={gameState}
         />
       );
     case Cards.Handmaid:
@@ -73,6 +85,7 @@ export default function PlayCardButton({ card, primary, disabled }: Props) {
           primary={primary}
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
+          gameState={gameState}
         />
       );
     case Cards.Prince:
@@ -81,6 +94,7 @@ export default function PlayCardButton({ card, primary, disabled }: Props) {
           primary={primary}
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
+          gameState={gameState}
         />
       );
     case Cards.Chancellor:
@@ -89,6 +103,7 @@ export default function PlayCardButton({ card, primary, disabled }: Props) {
           primary={primary}
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
+          gameState={gameState}
         />
       );
     case Cards.King:
@@ -97,6 +112,7 @@ export default function PlayCardButton({ card, primary, disabled }: Props) {
           primary={primary}
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
+          gameState={gameState}
         />
       );
     case Cards.Countess:
@@ -105,6 +121,7 @@ export default function PlayCardButton({ card, primary, disabled }: Props) {
           primary={primary}
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
+          gameState={gameState}
         />
       );
     case Cards.Princess:
@@ -113,6 +130,7 @@ export default function PlayCardButton({ card, primary, disabled }: Props) {
           primary={primary}
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
+          gameState={gameState}
         />
       );
   }

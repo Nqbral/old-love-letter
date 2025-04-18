@@ -20,6 +20,7 @@ import GameLobbyDelete from './GameLobbyDelete';
 export default function GameManager() {
   const router = useRouter();
   const { sm } = useSocketManager();
+  const clientId = sm.getSocketId();
   const [lobbyState, setLobbyState] = useState<
     ServerPayloads[ServerEvents.LobbyState]
   >({
@@ -38,7 +39,7 @@ export default function GameManager() {
     lobbyId: '',
     players: '',
     discardedCard: '',
-    lastPlayedCard: '',
+    lastPlayedCard: undefined,
     playerTurn: '',
     playersTurnOrder: [],
     deck: [],
@@ -152,7 +153,7 @@ export default function GameManager() {
       return <GameLobby lobbyState={lobbyState} />;
     }
 
-    return <Game gameState={gameState} />;
+    return <Game gameState={gameState} clientId={clientId} />;
   }
 
   return (

@@ -8,40 +8,30 @@ import { PlayerGame } from '@love-letter/shared/common/Player';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';
 import { useEffect, useState } from 'react';
-import { Bounce, ToastContainer } from 'react-toastify';
+import { Hearts } from 'react-loader-spinner';
+import { ToastContainer } from 'react-toastify';
 
 type Props = {
   gameState: ServerPayloads[ServerEvents.GameState];
+  clientId: string | undefined;
 };
 
-export default function Game({ gameState }: Props) {
+export default function Game({ gameState, clientId }: Props) {
   const { sm } = useSocketManager();
   const [playersTurnOrder, setPlayersTurnOrder] = useState(['']);
   const [playersParsed, setPlayersParsed] = useState(new Map());
-  const [myPlayer, setMyPlayer] = useState<PlayerGame>({
-    id: '',
-    playerName: '',
-    color: '',
-    score: 0,
-    cards: [],
-    activeCards: [],
-  });
 
   useEffect(() => {
-    const socketId = sm.getSocketId();
-
-    if (gameState.players == '' || myPlayer.id != '') {
+    if (gameState.players == '') {
       return;
     }
     const playersParsed = JSON.parse(gameState.players, reviver);
     setPlayersParsed(playersParsed);
 
-    if (socketId != null) {
-      setMyPlayer(playersParsed.get(socketId));
-
+    if (clientId != null && playersTurnOrder[0] == '') {
       const indexMyPlayerTurn = gameState.playersTurnOrder.findIndex(
         (playerTurn) => {
-          return playerTurn == socketId;
+          return playerTurn == clientId;
         },
       );
 
@@ -67,18 +57,33 @@ export default function Game({ gameState }: Props) {
       }
     }
   }, [gameState]);
+
+  if (playersParsed.size == 0) {
+    return (
+      <Hearts
+        height="80"
+        width="80"
+        color="oklch(87.9% 0.169 91.605)"
+        ariaLabel="hearts-loading"
+        wrapperStyle={{}}
+        wrapperClass=""
+        visible={true}
+      />
+    );
+  }
+
   return (
     <div className="flex min-h-screen w-full flex-row gap-6">
       <ToastContainer />
       <GameInformations
-        myPlayer={myPlayer}
+        myPlayer={playersParsed.get(clientId)}
         gameState={gameState}
         playersParsed={playersParsed}
       />
       <div className="flex w-full flex-row items-center">
         <Deck gameState={gameState} />
         <div className="flex h-full w-full flex-col items-center justify-around">
-          <Player myPlayer={myPlayer} />
+          <Player myPlayer={playersParsed.get(clientId)} />
           <div className="flex flex-row gap-32">
             {playersTurnOrder[0] != '' &&
               playersTurnOrder.map((playerTurn) => {

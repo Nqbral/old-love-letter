@@ -104,6 +104,8 @@ export class LobbyManager {
     client: AuthenticatedSocket,
   ): void {
     const lobby = this.getLobby(lobbyId, client);
+
+    lobby.instance.playCard(client, card);
   }
 
   // Periodically clean up lobbies

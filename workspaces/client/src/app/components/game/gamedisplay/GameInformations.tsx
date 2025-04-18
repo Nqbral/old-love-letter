@@ -1,5 +1,5 @@
-import GreenButton from '@components/buttons/GreenButton';
 import RedButton from '@components/buttons/RedButton';
+import SecondaryButton from '@components/buttons/SecondaryButton';
 import { PlayerGame } from '@love-letter/shared/common/Player';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
@@ -29,6 +29,7 @@ export default function GameInformations({
             key={card + index}
             primary={index % 2 == 0}
             disabled={gameState.playerTurn != myPlayer.id}
+            gameState={gameState}
           />
         );
       })}
@@ -54,7 +55,7 @@ export default function GameInformations({
       <h2 className="text-secondary-hover pb-4 text-xl">Ancien tour de jeu</h2>
       <p>Aucun joueur n'a joué pour le moment</p>
       <hr className="my-12 w-32 border-1 border-slate-700" />
-      <GreenButton
+      <SecondaryButton
         buttonText="Aides de jeu"
         onClick={() => {}}
         disabled={false}

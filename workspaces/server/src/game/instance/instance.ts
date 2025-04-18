@@ -36,7 +36,7 @@ export class Instance {
 
   public discardedCard: Cards;
 
-  public lastPlayedCard: Cards;
+  public lastPlayedCard: Cards | undefined;
 
   constructor(private readonly lobby: Lobby) {}
 
@@ -147,6 +147,55 @@ export class Instance {
       if (card != undefined) {
         player.cards.push(card);
       }
+    }
+  }
+
+  public playCard(client: AuthenticatedSocket, card: Cards): void {
+    if (client.id != this.playerTurn) {
+      throw new ServerException(
+        SocketExceptions.LobbyError,
+        'This is not the turn of the player',
+      );
+    }
+
+    let player = this.players.get(client.id);
+
+    if (player != null) {
+      let indexPlayerCardPlayed = player.cards.findIndex((value) => {
+        return value == card;
+      });
+
+      if (indexPlayerCardPlayed != -1) {
+        this.lastPlayedCard = card;
+        player.cards.splice(indexPlayerCardPlayed, 1);
+        this.nextTurn();
+        this.playerDrawCard();
+        this.dispatchGameState();
+        return;
+      }
+    }
+
+    throw new ServerException(
+      SocketExceptions.LobbyError,
+      'Error while playing card',
+    );
+  }
+
+  public nextTurn() {
+    let indexCurrentPlayer = this.playersTurnOrder.findIndex((value) => {
+      return value == this.playerTurn;
+    });
+    let nextPlayer = 0;
+
+    if (indexCurrentPlayer != -1) {
+      nextPlayer = indexCurrentPlayer + 1;
+
+      if (indexCurrentPlayer == this.playersTurnOrder.length - 1) {
+        nextPlayer = 0;
+      }
+
+      this.playerTurn = this.playersTurnOrder[nextPlayer];
+      return;
     }
   }
 

@@ -18,10 +18,10 @@ export default function OtherPlayer({ player }: Props) {
         <div className={player.color}>{player.playerName}</div>
       </div>
       <div className="flex flex-row items-center gap-2">
-        {player.cards.map((card) => {
+        {player.cards.map((card, index) => {
           return (
             <Image
-              key={card}
+              key={index}
               className="w-24"
               src={BackCard}
               alt="player_card"

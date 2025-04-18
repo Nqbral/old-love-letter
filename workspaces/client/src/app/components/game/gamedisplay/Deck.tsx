@@ -3,6 +3,8 @@ import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
 import Image from 'next/image';
 
+import LastPlayedCard from './deck/LastPlayedCard';
+
 type Props = {
   gameState: ServerPayloads[ServerEvents.GameState];
 };
@@ -16,8 +18,13 @@ export default function Deck({ gameState }: Props) {
       </div>
       <div className="flex w-24 flex-col items-center gap-4">
         <div>Défausse</div>
-        <div className="h-full w-24 rounded-sm border-1 border-dashed border-slate-700"></div>
-        {/* <Image src={Handmaid} alt="discard" /> */}
+        {gameState.lastPlayedCard != undefined ? (
+          <div>
+            <LastPlayedCard card={gameState.lastPlayedCard} />
+          </div>
+        ) : (
+          <div className="h-full w-24 rounded-sm border-1 border-dashed border-slate-700"></div>
+        )}
       </div>
     </div>
   );

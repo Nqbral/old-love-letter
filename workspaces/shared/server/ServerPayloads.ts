@@ -36,7 +36,7 @@ export type ServerPayloads = {
     lobbyId: string;
     players: string;
     discardedCard: string;
-    lastPlayedCard: string;
+    lastPlayedCard: Cards | undefined;
     playerTurn: string;
     playersTurnOrder: string[];
     deck: Cards[];
