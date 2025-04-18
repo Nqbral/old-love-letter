@@ -38,6 +38,8 @@ export class Instance {
 
   public lastPlayedCard: Cards | undefined;
 
+  public scoreToReach: number;
+
   constructor(private readonly lobby: Lobby) {}
 
   public triggerStart(client: AuthenticatedSocket): void {
@@ -66,6 +68,7 @@ export class Instance {
     this.initPlayers();
     this.initializeCards();
     this.initializeTurns();
+    this.initScoreToReach();
     this.setRandomTurn();
     this.playerDrawCard();
 
@@ -121,6 +124,7 @@ export class Instance {
         score: 0,
         cards: [],
         activeCards: [],
+        alive: true,
       });
     });
   }
@@ -129,6 +133,23 @@ export class Instance {
     this.playersTurnOrder = Array.from(this.players.keys()).sort(
       (a, b) => 0.5 - Math.random(),
     );
+  }
+
+  private initScoreToReach(): void {
+    switch (this.players.size) {
+      case 2:
+        this.scoreToReach = 6;
+        break;
+      case 3:
+        this.scoreToReach = 5;
+        break;
+      case 4:
+        this.scoreToReach = 4;
+        break;
+      default:
+        this.scoreToReach = 3;
+        break;
+    }
   }
 
   // Set the turn on one of the player randomly (at start game only)

@@ -2,14 +2,12 @@ import Deck from '@components/game/gamedisplay/Deck';
 import GameInformations from '@components/game/gamedisplay/GameInformations';
 import OtherPlayer from '@components/game/gamedisplay/OtherPlayer';
 import Player from '@components/game/gamedisplay/Player';
-import useSocketManager from '@components/hooks/useSocketManager';
 import { reviver } from '@love-letter/shared/common/JsonHelper';
-import { PlayerGame } from '@love-letter/shared/common/Player';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';
 import { useEffect, useState } from 'react';
 import { Hearts } from 'react-loader-spinner';
-import { ToastContainer } from 'react-toastify';
+import { Slide, ToastContainer } from 'react-toastify';
 
 type Props = {
   gameState: ServerPayloads[ServerEvents.GameState];
@@ -17,7 +15,6 @@ type Props = {
 };
 
 export default function Game({ gameState, clientId }: Props) {
-  const { sm } = useSocketManager();
   const [playersTurnOrder, setPlayersTurnOrder] = useState(['']);
   const [playersParsed, setPlayersParsed] = useState(new Map());
 
@@ -74,7 +71,7 @@ export default function Game({ gameState, clientId }: Props) {
 
   return (
     <div className="flex min-h-screen w-full flex-row gap-6">
-      <ToastContainer />
+      <ToastContainer transition={Slide} />
       <GameInformations
         myPlayer={playersParsed.get(clientId)}
         gameState={gameState}

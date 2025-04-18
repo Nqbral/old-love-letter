@@ -14,4 +14,5 @@ export type PlayerGame = {
   score: number;
   cards: Cards[];
   activeCards: Cards[];
+  alive: true;
 };
