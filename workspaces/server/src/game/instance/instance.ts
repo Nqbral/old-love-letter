@@ -226,7 +226,7 @@ export class Instance {
             this.playCountessCard();
             break;
           case Cards.Princess:
-            this.playPrincessCard();
+            this.playPrincessCard(client.id);
             break;
         }
 
@@ -398,7 +398,8 @@ export class Instance {
     this.dispatchGameState();
   }
 
-  public playPrincessCard() {
+  public playPrincessCard(clientId: string) {
+    this.killPlayer(clientId);
     this.nextTurn();
     this.playerDrawCard();
     this.dispatchGameState();

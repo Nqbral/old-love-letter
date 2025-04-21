@@ -1,8 +1,10 @@
 import PrimaryOrSecondaryButton from '@components/buttons/PrimaryOrSecondaryButton';
-import useSocketManager from '@components/hooks/useSocketManager';
-import { ClientEvents } from '@shared/client/ClientEvents';
+import { Modal } from '@mui/material';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
+import { useState } from 'react';
+
+import PlayModalPrincess from './PlayModal/PlayModalPrincess';
 
 type Props = {
   primary: boolean;
@@ -16,7 +18,9 @@ export default function PlayPrincessButton({
   showNotYourTurn,
   gameState,
 }: Props) {
-  const { sm } = useSocketManager();
+  const [openPlayModalPrincess, setOpenPlayModalPrincess] = useState(false);
+  const handleOpenPlayModalPrincess = () => setOpenPlayModalPrincess(true);
+  const handleClosePlayModalPrincess = () => setOpenPlayModalPrincess(false);
 
   const playPrincess = () => {
     if (disabled) {
@@ -24,19 +28,27 @@ export default function PlayPrincessButton({
       return;
     }
 
-    sm.emit({
-      event: ClientEvents.GamePlayPrincess,
-      data: {
-        lobbyId: gameState.lobbyId,
-      },
-    });
+    handleOpenPlayModalPrincess();
   };
 
   return (
-    <PrimaryOrSecondaryButton
-      buttonText="Jouer la Princesse"
-      onClick={playPrincess}
-      primary={primary}
-    />
+    <>
+      <Modal
+        open={openPlayModalPrincess}
+        onClose={handleClosePlayModalPrincess}
+        aria-labelledby="modal-princess"
+        aria-describedby="modal-princess-play"
+      >
+        <PlayModalPrincess
+          handleClose={handleClosePlayModalPrincess}
+          gameState={gameState}
+        />
+      </Modal>
+      <PrimaryOrSecondaryButton
+        buttonText="Jouer la Princesse"
+        onClick={playPrincess}
+        primary={primary}
+      />
+    </>
   );
 }
