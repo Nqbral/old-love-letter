@@ -176,7 +176,7 @@ export class Instance {
   public playCard(client: AuthenticatedSocket, card: Cards, data): void {
     if (client.id != this.playerTurn) {
       throw new ServerException(
-        SocketExceptions.LobbyError,
+        SocketExceptions.GameError,
         'This is not the turn of the player',
       );
     }
@@ -189,10 +189,6 @@ export class Instance {
       });
 
       if (indexPlayerCardPlayed != -1) {
-        if (card != Cards.Spy && card != Cards.Handmaid) {
-          this.lastPlayedCard = card;
-        }
-        player.cards.splice(indexPlayerCardPlayed, 1);
         switch (card) {
           case Cards.Spy:
             this.playSpyCard(player);
@@ -223,12 +219,20 @@ export class Instance {
             this.playKingCard(client.id, data.playerIdTarget, data.noEffect);
             break;
           case Cards.Countess:
-            this.playCountessCard();
             break;
           case Cards.Princess:
             this.playPrincessCard(client.id);
             break;
         }
+
+        if (card != Cards.Spy && card != Cards.Handmaid) {
+          this.lastPlayedCard = card;
+        }
+        player.cards.splice(indexPlayerCardPlayed, 1);
+
+        this.nextTurn();
+        this.playerDrawCard();
+        this.dispatchGameState();
 
         return;
       }
@@ -242,9 +246,6 @@ export class Instance {
 
   public playSpyCard(player: PlayerGame) {
     player.activeCards.push(Cards.Spy);
-    this.nextTurn();
-    this.playerDrawCard();
-    this.dispatchGameState();
   }
 
   public playGuardCard(
@@ -254,6 +255,10 @@ export class Instance {
   ) {
     let playerTargeted = this.players.get(playerIdTarget);
 
+    if (playerTargeted != undefined) {
+      this.checkPlayerIsProtected(playerTargeted);
+    }
+
     if (!noEffect) {
       if (playerTargeted != undefined) {
         if (playerTargeted.cards[0] == cardTarget) {
@@ -261,10 +266,6 @@ export class Instance {
         }
       }
     }
-
-    this.nextTurn();
-    this.playerDrawCard();
-    this.dispatchGameState();
   }
 
   public playPriestCard(
@@ -273,6 +274,10 @@ export class Instance {
     noEffect: boolean,
   ) {
     let playerTargeted = this.players.get(playerIdTarget);
+
+    if (playerTargeted != undefined) {
+      this.checkPlayerIsProtected(playerTargeted);
+    }
 
     if (!noEffect) {
       if (playerTargeted != undefined) {
@@ -288,9 +293,6 @@ export class Instance {
         );
       }
     }
-    this.nextTurn();
-    this.playerDrawCard();
-    this.dispatchGameState();
   }
 
   public playBaronCard(
@@ -300,6 +302,10 @@ export class Instance {
   ) {
     let myPlayer = this.players.get(clientId);
     let playerTargeted = this.players.get(playerIdTarget);
+
+    if (playerTargeted != undefined) {
+      this.checkPlayerIsProtected(playerTargeted);
+    }
 
     if (!noEffect) {
       if (myPlayer != undefined && playerTargeted != undefined) {
@@ -318,31 +324,38 @@ export class Instance {
         }
       }
     }
-
-    this.nextTurn();
-    this.playerDrawCard();
-    this.dispatchGameState();
   }
 
   public playHandmaidCard(player: PlayerGame) {
     player.activeCards.push(Cards.Handmaid);
-    this.nextTurn();
-    this.playerDrawCard();
-    this.dispatchGameState();
   }
 
   public playPrinceCard(clientId: string, playerIdTarget: string) {
+    let myPlayer = this.players.get(clientId);
+
+    if (
+      myPlayer != undefined &&
+      this.checkPlayerHasCard(myPlayer, Cards.Countess)
+    ) {
+      throw new ServerException(
+        SocketExceptions.GameError,
+        "Can't play a king while having a countess in the hand",
+      );
+    }
+
     let playerTargeted = this.players.get(playerIdTarget);
 
+    if (playerTargeted != undefined && playerTargeted.id != clientId) {
+      this.checkPlayerIsProtected(playerTargeted);
+    }
+
     if (playerTargeted != undefined) {
-      if (playerTargeted.cards[0] == Cards.Princess) {
+      if (this.checkPlayerHasCard(playerTargeted, Cards.Princess)) {
         this.killPlayer(playerIdTarget);
-        this.nextTurn();
-        this.playerDrawCard();
-        this.dispatchGameState();
 
         return;
       }
+
       this.lastPlayedCard = playerTargeted.cards[0];
       playerTargeted.cards = [];
 
@@ -360,16 +373,9 @@ export class Instance {
         }
       }
     }
-    this.nextTurn();
-    this.playerDrawCard();
-    this.dispatchGameState();
   }
 
-  public playChancellorCard() {
-    this.nextTurn();
-    this.playerDrawCard();
-    this.dispatchGameState();
-  }
+  public playChancellorCard() {}
 
   public playKingCard(
     clientId: string,
@@ -377,32 +383,54 @@ export class Instance {
     noEffect: boolean,
   ) {
     let myPlayer = this.players.get(clientId);
+
+    if (
+      myPlayer != undefined &&
+      this.checkPlayerHasCard(myPlayer, Cards.Countess)
+    ) {
+      throw new ServerException(
+        SocketExceptions.GameError,
+        "Can't play a king while having a countess in the hand",
+      );
+    }
+
     let playerTargeted = this.players.get(playerIdTarget);
+
+    if (playerTargeted != undefined) {
+      this.checkPlayerIsProtected(playerTargeted);
+    }
 
     if (!noEffect) {
       if (myPlayer != undefined && playerTargeted != undefined) {
-        let myPlayerCard = myPlayer.cards;
+        let myPlayerCard = myPlayer.cards.filter((card) => {
+          return card != Cards.King;
+        });
+
         myPlayer.cards = playerTargeted.cards;
         playerTargeted.cards = myPlayerCard;
       }
     }
-
-    this.nextTurn();
-    this.playerDrawCard();
-    this.dispatchGameState();
-  }
-
-  public playCountessCard() {
-    this.nextTurn();
-    this.playerDrawCard();
-    this.dispatchGameState();
   }
 
   public playPrincessCard(clientId: string) {
     this.killPlayer(clientId);
-    this.nextTurn();
-    this.playerDrawCard();
-    this.dispatchGameState();
+  }
+
+  public checkPlayerHasCard(player: PlayerGame, card: Cards): boolean {
+    return player.cards.includes(card);
+  }
+
+  public checkPlayerHasActiveCard(player: PlayerGame, card: Cards): boolean {
+    return player.activeCards.includes(card);
+  }
+
+  public checkPlayerIsProtected(player: PlayerGame): void {
+    if (this.checkPlayerHasActiveCard(player, Cards.Handmaid)) {
+      throw new ServerException(
+        SocketExceptions.GameError,
+        'The player targeted is protected by Handmaid.',
+      );
+    }
   }
 
   public killPlayer(playerId: Socket['id']) {
