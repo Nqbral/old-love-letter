@@ -23,7 +23,7 @@ export default function CustomNotification({
     <div className={`${medievalsharp.className}`}>
       <div className="flex w-full flex-col items-center gap-4">
         <h3 className="text-primary text-lg">{data.title}</h3>
-        <p className="text-sm text-white">{data.content}</p>
+        <p className="text-center text-sm text-white">{data.content}</p>
       </div>
     </div>
   );

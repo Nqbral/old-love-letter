@@ -54,6 +54,8 @@ export default function PlayModalGuard({
         noEffect: true,
       },
     });
+
+    backButton();
   };
 
   const playGuard = () => {

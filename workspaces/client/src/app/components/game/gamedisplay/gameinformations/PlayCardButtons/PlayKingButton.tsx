@@ -1,9 +1,12 @@
 import PrimaryOrSecondaryButton from '@components/buttons/PrimaryOrSecondaryButton';
+import CustomNotification from '@components/notifications/CustomNotification';
 import { Modal } from '@mui/material';
+import { Cards } from '@shared/common/Cards';
 import { PlayerGame } from '@shared/common/Player';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 import PlayModalKing from './PlayModal/PlayModalKing';
 
@@ -31,6 +34,23 @@ export default function PlayKingButton({
   const playKing = () => {
     if (disabled) {
       showNotYourTurn();
+      return;
+    }
+
+    if (myPlayer.cards.includes(Cards.Countess)) {
+      toast(CustomNotification, {
+        data: {
+          title: 'Erreur de jeu',
+          content:
+            'Vous ne pouvez pas jouer le roi si vous possédez la comtesse.',
+        },
+        hideProgressBar: true,
+        closeButton: false,
+        style: {
+          width: 245,
+        },
+      });
+
       return;
     }
 
