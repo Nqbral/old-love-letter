@@ -1,4 +1,4 @@
-import { IsInt, IsString, Max, Min } from 'class-validator';
+import { IsBoolean, IsInt, IsString, Max, Min } from 'class-validator';
 
 //Lobby
 export class LobbyCreateDto {
@@ -38,4 +38,44 @@ export class StartGameDto {
 export class PlayCardGameDto {
   @IsString()
   lobbyId: string;
+}
+
+export class PlayGuardGameDto extends PlayCardGameDto {
+  @IsString()
+  playerIdTarget: string;
+
+  @IsString()
+  cardTarget: string;
+
+  @IsBoolean()
+  noEffect: boolean;
+}
+
+export class PlayPriestGameDto extends PlayCardGameDto {
+  @IsString()
+  playerIdTarget: string;
+
+  @IsBoolean()
+  noEffect: boolean;
+}
+
+export class PlayBaronGameDto extends PlayCardGameDto {
+  @IsString()
+  playerIdTarget: string;
+
+  @IsBoolean()
+  noEffect: boolean;
+}
+
+export class PlayPrinceGameDto extends PlayCardGameDto {
+  @IsString()
+  playerIdTarget: string;
+}
+
+export class PlayKingGameDto extends PlayCardGameDto {
+  @IsString()
+  playerIdTarget: string;
+
+  @IsBoolean()
+  noEffect: boolean;
 }

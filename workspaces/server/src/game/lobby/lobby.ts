@@ -112,6 +112,14 @@ export class Lobby {
     this.dispatchToLobby(ServerEvents.LobbyState, payload);
   }
 
+  public dispatchToClient<T>(
+    client: string,
+    event: ServerEvents,
+    payload: T,
+  ): void {
+    this.server.to(client).emit(event, payload);
+  }
+
   public dispatchToLobby<T>(event: ServerEvents, payload: T): void {
     this.server.to(this.id).emit(event, payload);
   }

@@ -47,6 +47,8 @@ export default function GameInformations({
               primary={index % 2 == 0}
               disabled={gameState.playerTurn != myPlayer.id}
               gameState={gameState}
+              playersParsed={playersParsed}
+              myPlayer={myPlayer}
             />
           );
         })}
@@ -84,6 +86,9 @@ export default function GameInformations({
           onClick={() => {}}
           disabled={false}
         />
+        <p className="text-primary-hover mt-8">
+          Veuillez ne pas rafraîchir la page !
+        </p>
       </div>
     </>
   );

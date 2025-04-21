@@ -1,14 +1,19 @@
 import PrimaryOrSecondaryButton from '@components/buttons/PrimaryOrSecondaryButton';
-import useSocketManager from '@components/hooks/useSocketManager';
-import { ClientEvents } from '@shared/client/ClientEvents';
+import { Modal } from '@mui/material';
+import { PlayerGame } from '@shared/common/Player';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
+import { useState } from 'react';
+
+import PlayModalGuard from './PlayModal/PlayModalGuard';
 
 type Props = {
   primary: boolean;
   disabled: boolean;
   showNotYourTurn: () => void;
   gameState: ServerPayloads[ServerEvents.GameState];
+  playersParsed: Map<any, any>;
+  myPlayer: PlayerGame;
 };
 
 export default function PlayGuardButton({
@@ -16,8 +21,12 @@ export default function PlayGuardButton({
   disabled,
   showNotYourTurn,
   gameState,
+  playersParsed,
+  myPlayer,
 }: Props) {
-  const { sm } = useSocketManager();
+  const [openPlayModalGuard, setOpenPlayModalGuard] = useState(false);
+  const handleOpenPlayModalGuard = () => setOpenPlayModalGuard(true);
+  const handleClosePlayModalGuard = () => setOpenPlayModalGuard(false);
 
   const playGuard = () => {
     if (disabled) {
@@ -25,19 +34,29 @@ export default function PlayGuardButton({
       return;
     }
 
-    sm.emit({
-      event: ClientEvents.GamePlayGuard,
-      data: {
-        lobbyId: gameState.lobbyId,
-      },
-    });
+    handleOpenPlayModalGuard();
   };
 
   return (
-    <PrimaryOrSecondaryButton
-      buttonText="Jouer le Garde"
-      onClick={playGuard}
-      primary={primary}
-    />
+    <>
+      <Modal
+        open={openPlayModalGuard}
+        onClose={handleClosePlayModalGuard}
+        aria-labelledby="modal-guard"
+        aria-describedby="modal-guard-play"
+      >
+        <PlayModalGuard
+          handleClose={handleClosePlayModalGuard}
+          gameState={gameState}
+          playersParsed={playersParsed}
+          myPlayer={myPlayer}
+        />
+      </Modal>
+      <PrimaryOrSecondaryButton
+        buttonText="Jouer le Garde"
+        onClick={playGuard}
+        primary={primary}
+      />
+    </>
   );
 }

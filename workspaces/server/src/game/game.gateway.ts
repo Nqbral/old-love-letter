@@ -2,7 +2,12 @@ import {
   LobbyCreateDto,
   LobbyJoinDto,
   LobbyRenamePlayerDto,
+  PlayBaronGameDto,
   PlayCardGameDto,
+  PlayGuardGameDto,
+  PlayKingGameDto,
+  PlayPriestGameDto,
+  PlayPrinceGameDto,
 } from '@app/game/dtos';
 import { LobbyManager } from '@app/game/lobby/lobby.manager';
 import { AuthenticatedSocket } from '@app/game/types';
@@ -106,51 +111,51 @@ export class GameGateway implements OnGatewayConnection {
 
   @SubscribeMessage(ClientEvents.GamePlaySpy)
   onPlaySpy(client: AuthenticatedSocket, data: PlayCardGameDto): void {
-    this.lobbyManager.playCard(data.lobbyId, Cards.Spy, client);
+    this.lobbyManager.playCard(data.lobbyId, Cards.Spy, client, data);
   }
 
   @SubscribeMessage(ClientEvents.GamePlayGuard)
-  onPlayGuard(client: AuthenticatedSocket, data: PlayCardGameDto): void {
-    this.lobbyManager.playCard(data.lobbyId, Cards.Guard, client);
+  onPlayGuard(client: AuthenticatedSocket, data: PlayGuardGameDto): void {
+    this.lobbyManager.playCard(data.lobbyId, Cards.Guard, client, data);
   }
 
   @SubscribeMessage(ClientEvents.GamePlayPriest)
-  onPlayPriest(client: AuthenticatedSocket, data: PlayCardGameDto): void {
-    this.lobbyManager.playCard(data.lobbyId, Cards.Priest, client);
+  onPlayPriest(client: AuthenticatedSocket, data: PlayPriestGameDto): void {
+    this.lobbyManager.playCard(data.lobbyId, Cards.Priest, client, data);
   }
 
   @SubscribeMessage(ClientEvents.GamePlayBaron)
-  onPlayBaron(client: AuthenticatedSocket, data: PlayCardGameDto): void {
-    this.lobbyManager.playCard(data.lobbyId, Cards.Baron, client);
+  onPlayBaron(client: AuthenticatedSocket, data: PlayBaronGameDto): void {
+    this.lobbyManager.playCard(data.lobbyId, Cards.Baron, client, data);
   }
 
   @SubscribeMessage(ClientEvents.GamePlayHandmaid)
   onPlayHandmaid(client: AuthenticatedSocket, data: PlayCardGameDto): void {
-    this.lobbyManager.playCard(data.lobbyId, Cards.Handmaid, client);
+    this.lobbyManager.playCard(data.lobbyId, Cards.Handmaid, client, data);
   }
 
   @SubscribeMessage(ClientEvents.GamePlayPrince)
-  onPlayPrince(client: AuthenticatedSocket, data: PlayCardGameDto): void {
-    this.lobbyManager.playCard(data.lobbyId, Cards.Prince, client);
+  onPlayPrince(client: AuthenticatedSocket, data: PlayPrinceGameDto): void {
+    this.lobbyManager.playCard(data.lobbyId, Cards.Prince, client, data);
   }
 
   @SubscribeMessage(ClientEvents.GamePlayChancellor)
   onPlayChancellor(client: AuthenticatedSocket, data: PlayCardGameDto): void {
-    this.lobbyManager.playCard(data.lobbyId, Cards.Chancellor, client);
+    this.lobbyManager.playCard(data.lobbyId, Cards.Chancellor, client, data);
   }
 
   @SubscribeMessage(ClientEvents.GamePlayKing)
-  onPlayKing(client: AuthenticatedSocket, data: PlayCardGameDto): void {
-    this.lobbyManager.playCard(data.lobbyId, Cards.King, client);
+  onPlayKing(client: AuthenticatedSocket, data: PlayKingGameDto): void {
+    this.lobbyManager.playCard(data.lobbyId, Cards.King, client, data);
   }
 
   @SubscribeMessage(ClientEvents.GamePlayCountess)
   onPlayCountess(client: AuthenticatedSocket, data: PlayCardGameDto): void {
-    this.lobbyManager.playCard(data.lobbyId, Cards.Countess, client);
+    this.lobbyManager.playCard(data.lobbyId, Cards.Countess, client, data);
   }
 
   @SubscribeMessage(ClientEvents.GamePlayPrincess)
   onPlayPrincess(client: AuthenticatedSocket, data: PlayCardGameDto): void {
-    this.lobbyManager.playCard(data.lobbyId, Cards.Princess, client);
+    this.lobbyManager.playCard(data.lobbyId, Cards.Princess, client, data);
   }
 }

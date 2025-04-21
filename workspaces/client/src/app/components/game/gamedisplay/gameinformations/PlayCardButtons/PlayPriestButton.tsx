@@ -1,14 +1,19 @@
 import PrimaryOrSecondaryButton from '@components/buttons/PrimaryOrSecondaryButton';
-import useSocketManager from '@components/hooks/useSocketManager';
-import { ClientEvents } from '@shared/client/ClientEvents';
+import { Modal } from '@mui/material';
+import { PlayerGame } from '@shared/common/Player';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
+import { useState } from 'react';
+
+import PlayModalPriest from './PlayModal/PlayModalPriest';
 
 type Props = {
   primary: boolean;
   disabled: boolean;
   showNotYourTurn: () => void;
   gameState: ServerPayloads[ServerEvents.GameState];
+  playersParsed: Map<any, any>;
+  myPlayer: PlayerGame;
 };
 
 export default function PlayPriestButton({
@@ -16,8 +21,12 @@ export default function PlayPriestButton({
   disabled,
   showNotYourTurn,
   gameState,
+  playersParsed,
+  myPlayer,
 }: Props) {
-  const { sm } = useSocketManager();
+  const [openPlayModalPriest, setOpenPlayModalPriest] = useState(false);
+  const handleOpenPlayModalPriest = () => setOpenPlayModalPriest(true);
+  const handleClosePlayModalPriest = () => setOpenPlayModalPriest(false);
 
   const playPriest = () => {
     if (disabled) {
@@ -25,19 +34,29 @@ export default function PlayPriestButton({
       return;
     }
 
-    sm.emit({
-      event: ClientEvents.GamePlayPriest,
-      data: {
-        lobbyId: gameState.lobbyId,
-      },
-    });
+    handleOpenPlayModalPriest();
   };
 
   return (
-    <PrimaryOrSecondaryButton
-      buttonText="Jouer le Prêtre"
-      onClick={playPriest}
-      primary={primary}
-    />
+    <>
+      <Modal
+        open={openPlayModalPriest}
+        onClose={handleClosePlayModalPriest}
+        aria-labelledby="modal-priest"
+        aria-describedby="modal-priest-play"
+      >
+        <PlayModalPriest
+          handleClose={handleClosePlayModalPriest}
+          gameState={gameState}
+          playersParsed={playersParsed}
+          myPlayer={myPlayer}
+        />
+      </Modal>
+      <PrimaryOrSecondaryButton
+        buttonText="Jouer le Prêtre"
+        onClick={playPriest}
+        primary={primary}
+      />
+    </>
   );
 }

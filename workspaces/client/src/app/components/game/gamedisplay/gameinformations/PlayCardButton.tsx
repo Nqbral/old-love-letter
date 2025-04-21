@@ -1,5 +1,6 @@
 import CustomNotification from '@components/notifications/CustomNotification';
 import { Cards } from '@shared/common/Cards';
+import { PlayerGame } from '@shared/common/Player';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
 import { toast } from 'react-toastify';
@@ -20,6 +21,8 @@ type Props = {
   primary: boolean;
   disabled: boolean;
   gameState: ServerPayloads[ServerEvents.GameState];
+  playersParsed: Map<any, any>;
+  myPlayer: PlayerGame;
 };
 
 export default function PlayCardButton({
@@ -27,6 +30,8 @@ export default function PlayCardButton({
   primary,
   disabled,
   gameState,
+  playersParsed,
+  myPlayer,
 }: Props) {
   const showNotYourTurn = () => {
     toast(CustomNotification, {
@@ -59,6 +64,8 @@ export default function PlayCardButton({
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
           gameState={gameState}
+          playersParsed={playersParsed}
+          myPlayer={myPlayer}
         />
       );
     case Cards.Priest:
@@ -68,6 +75,8 @@ export default function PlayCardButton({
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
           gameState={gameState}
+          playersParsed={playersParsed}
+          myPlayer={myPlayer}
         />
       );
     case Cards.Baron:
@@ -77,6 +86,8 @@ export default function PlayCardButton({
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
           gameState={gameState}
+          playersParsed={playersParsed}
+          myPlayer={myPlayer}
         />
       );
     case Cards.Handmaid:
@@ -95,6 +106,8 @@ export default function PlayCardButton({
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
           gameState={gameState}
+          playersParsed={playersParsed}
+          myPlayer={myPlayer}
         />
       );
     case Cards.Chancellor:
@@ -113,6 +126,8 @@ export default function PlayCardButton({
           disabled={disabled}
           showNotYourTurn={showNotYourTurn}
           gameState={gameState}
+          playersParsed={playersParsed}
+          myPlayer={myPlayer}
         />
       );
     case Cards.Countess:

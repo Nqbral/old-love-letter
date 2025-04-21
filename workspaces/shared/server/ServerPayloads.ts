@@ -32,10 +32,16 @@ export type ServerPayloads = {
     message: string;
   };
 
+  [ServerEvents.GamePriestPlayed]: {
+    cardGuessed: Cards;
+    playerGuessedName: string;
+    playerGuessedColor: string;
+  };
+
   [ServerEvents.GameState]: {
     lobbyId: string;
     players: string;
-    discardedCard: string;
+    discardedCard: Cards | undefined;
     lastPlayedCard: Cards | undefined;
     playerTurn: string;
     playersTurnOrder: string[];

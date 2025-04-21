@@ -2,12 +2,18 @@ import Deck from '@components/game/gamedisplay/Deck';
 import GameInformations from '@components/game/gamedisplay/GameInformations';
 import OtherPlayer from '@components/game/gamedisplay/OtherPlayer';
 import Player from '@components/game/gamedisplay/Player';
+import useSocketManager from '@components/hooks/useSocketManager';
+import { Listener } from '@components/websocket/types';
 import { reviver } from '@love-letter/shared/common/JsonHelper';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';
+import { Modal } from '@mui/material';
+import { Cards } from '@shared/common/Cards';
 import { useEffect, useState } from 'react';
 import { Hearts } from 'react-loader-spinner';
 import { Slide, ToastContainer } from 'react-toastify';
+
+import ModalPriestGuessed from './gamedisplay/showmodals/ModalPriestGuessed';
 
 type Props = {
   gameState: ServerPayloads[ServerEvents.GameState];
@@ -17,6 +23,42 @@ type Props = {
 export default function Game({ gameState, clientId }: Props) {
   const [playersTurnOrder, setPlayersTurnOrder] = useState(['']);
   const [playersParsed, setPlayersParsed] = useState(new Map());
+  const { sm } = useSocketManager();
+
+  // Priest Modal Show
+  const [gamePriestPlayed, setGamePriestPlayed] = useState<
+    ServerPayloads[ServerEvents.GamePriestPlayed]
+  >({ cardGuessed: Cards.Spy, playerGuessedName: '', playerGuessedColor: '' });
+
+  const [openPriestGuessed, setOpenPriestGuessed] = useState(false);
+
+  const handleOpenPriestGuessed = () => setOpenPriestGuessed(true);
+
+  const handleClosePriestGuessed = () => {
+    setOpenPriestGuessed(false);
+    setGamePriestPlayed({
+      cardGuessed: Cards.Spy,
+      playerGuessedName: '',
+      playerGuessedColor: '',
+    });
+  };
+
+  useEffect(() => {
+    sm.connect();
+
+    const onGamePriestPlayed: Listener<
+      ServerPayloads[ServerEvents.GamePriestPlayed]
+    > = (data) => {
+      setGamePriestPlayed(data);
+      handleOpenPriestGuessed();
+    };
+
+    sm.registerListener(ServerEvents.GamePriestPlayed, onGamePriestPlayed);
+
+    return () => {
+      sm.removeListener(ServerEvents.GamePriestPlayed, onGamePriestPlayed);
+    };
+  }, []);
 
   useEffect(() => {
     if (gameState.players == '') {
@@ -71,6 +113,17 @@ export default function Game({ gameState, clientId }: Props) {
 
   return (
     <div className="flex min-h-screen w-full flex-row gap-6">
+      <Modal
+        open={openPriestGuessed}
+        onClose={handleClosePriestGuessed}
+        aria-labelledby="modal-priest-guessed"
+        aria-describedby="modal-priest-guessed-play"
+      >
+        <ModalPriestGuessed
+          gamePriestPlayed={gamePriestPlayed}
+          handleClose={handleClosePriestGuessed}
+        />
+      </Modal>
       <ToastContainer transition={Slide} />
       <GameInformations
         myPlayer={playersParsed.get(clientId)}

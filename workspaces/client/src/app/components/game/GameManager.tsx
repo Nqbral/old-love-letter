@@ -38,7 +38,7 @@ export default function GameManager() {
   >({
     lobbyId: '',
     players: '',
-    discardedCard: '',
+    discardedCard: undefined,
     lastPlayedCard: undefined,
     playerTurn: '',
     playersTurnOrder: [],
