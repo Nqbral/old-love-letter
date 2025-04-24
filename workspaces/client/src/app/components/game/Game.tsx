@@ -5,6 +5,7 @@ import Player from '@components/game/gamedisplay/Player';
 import useSocketManager from '@components/hooks/useSocketManager';
 import BaronNotificationSelf from '@components/notifications/BaronNotificationSelf';
 import BaronNotificationTarget from '@components/notifications/BaronNotificationTarget';
+import DrawCardNotification from '@components/notifications/DrawCardNotification';
 import GuardNotification from '@components/notifications/GuardNotification';
 import KingNotificationSelf from '@components/notifications/KingNotificationSelf';
 import KingNotificationTarget from '@components/notifications/KingNotificationTarget';
@@ -16,7 +17,6 @@ import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';
 import { Modal } from '@mui/material';
 import { Cards } from '@shared/common/Cards';
-import { ResultEvent } from '@shared/common/EventDescription';
 import { useEffect, useState } from 'react';
 import { Hearts } from 'react-loader-spinner';
 import { Slide, ToastContainer, toast } from 'react-toastify';
@@ -87,6 +87,22 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
       handleOpenChancellorPartTwo();
     };
 
+    const onGameMessageDrawCard: Listener<
+      ServerPayloads[ServerEvents.GameMessageDrawCard]
+    > = (data) => {
+      toast(DrawCardNotification, {
+        data: {
+          card: data.card,
+        },
+        hideProgressBar: true,
+        closeButton: false,
+        style: {
+          width: 220,
+        },
+        autoClose: 7000,
+      });
+    };
+
     const onGameMessageGuardNotGuessed: Listener<
       ServerPayloads[ServerEvents.GameMessageGuardNotGuessed]
     > = (data) => {
@@ -153,7 +169,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         hideProgressBar: true,
         closeButton: false,
         style: {
-          width: 400,
+          width: 250,
         },
         autoClose: 7000,
       });
@@ -172,7 +188,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         hideProgressBar: true,
         closeButton: false,
         style: {
-          width: data.result == ResultEvent.DrawBaron ? 200 : 400,
+          width: 250,
         },
         autoClose: 7000,
       });
@@ -240,6 +256,10 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
       onGameChancellorPlayed,
     );
     sm.registerListener(
+      ServerEvents.GameMessageDrawCard,
+      onGameMessageDrawCard,
+    );
+    sm.registerListener(
       ServerEvents.GameMessageGuardNotGuessed,
       onGameMessageGuardNotGuessed,
     );
@@ -271,6 +291,10 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
       sm.removeListener(
         ServerEvents.GameChancellorPlayed,
         onGameChancellorPlayed,
+      );
+      sm.removeListener(
+        ServerEvents.GameMessageDrawCard,
+        onGameMessageDrawCard,
       );
       sm.removeListener(
         ServerEvents.GameMessageGuardNotGuessed,

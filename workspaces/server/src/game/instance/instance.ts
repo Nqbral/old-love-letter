@@ -176,9 +176,20 @@ export class Instance {
     let player = this.players.get(this.playerTurn);
     if (player != null) {
       let card = this.deck.pop();
+
       if (card != undefined) {
         player.cards.push(card);
       }
+
+      const payloadMessage: ServerPayloads[ServerEvents.GameMessageDrawCard] = {
+        card: card,
+      };
+
+      this.lobby.dispatchToClient(
+        player.id,
+        ServerEvents.GameMessageDrawCard,
+        payloadMessage,
+      );
     }
   }
 

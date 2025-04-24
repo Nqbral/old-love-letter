@@ -33,6 +33,10 @@ export type ServerPayloads = {
     message: string;
   };
 
+  [ServerEvents.GameMessageDrawCard]: {
+    card: Cards | undefined;
+  };
+
   [ServerEvents.GameMessageGuardNotGuessed]: {
     player: PlayerGame;
     cardGuessed: Cards;
