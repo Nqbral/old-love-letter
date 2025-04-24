@@ -557,7 +557,6 @@ export class Instance {
 
     if (playerTargeted != undefined) {
       if (this.checkPlayerHasCard(playerTargeted, Cards.Princess)) {
-        this.killPlayer(playerIdTarget);
         this.secondPlayedCard = Cards.Princess;
         this.eventDescription = EventDescription.fromPrince(
           player,
@@ -565,6 +564,22 @@ export class Instance {
           undefined,
           Cards.Princess,
         );
+
+        const payloadMessage: ServerPayloads[ServerEvents.GameMessagePrince] = {
+          player: player,
+          playerTargeted: playerTargeted,
+          lostCard: Cards.Princess,
+          drawedCard: undefined,
+          killedPlayer: true,
+        };
+
+        this.lobby.dispatchToClient(
+          playerTargeted.id,
+          ServerEvents.GameMessagePrince,
+          payloadMessage,
+        );
+
+        this.killPlayer(playerIdTarget);
 
         return;
       }
@@ -586,20 +601,36 @@ export class Instance {
       );
 
       playerTargeted.cards = [];
+      let drawedCard;
 
       if (this.deck.length == 0) {
         if (this.discardedCard != undefined) {
-          playerTargeted.cards = [this.discardedCard];
+          drawedCard = this.discardedCard;
+          playerTargeted.cards = [drawedCard];
         }
 
         this.discardedCard = undefined;
       } else {
-        let drawCard = this.deck.pop();
+        drawedCard = this.deck.pop();
 
-        if (drawCard != undefined) {
-          playerTargeted.cards = [drawCard];
+        if (drawedCard != undefined) {
+          playerTargeted.cards = [drawedCard];
         }
       }
+
+      const payloadMessage: ServerPayloads[ServerEvents.GameMessagePrince] = {
+        player: player,
+        playerTargeted: playerTargeted,
+        lostCard: this.secondPlayedCard,
+        drawedCard: drawedCard,
+        killedPlayer: false,
+      };
+
+      this.lobby.dispatchToClient(
+        playerTargeted.id,
+        ServerEvents.GameMessagePrince,
+        payloadMessage,
+      );
     }
   }
 

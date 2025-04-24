@@ -62,6 +62,14 @@ export type ServerPayloads = {
     result: ResultEvent;
   };
 
+  [ServerEvents.GameMessagePrince]: {
+    player: PlayerGame;
+    playerTargeted: PlayerGame;
+    lostCard: Cards;
+    drawedCard: Cards | undefined;
+    killedPlayer: boolean;
+  };
+
   [ServerEvents.GameMessageKingSelf]: {
     playerTargeted: PlayerGame;
     cardPlayer: Cards;

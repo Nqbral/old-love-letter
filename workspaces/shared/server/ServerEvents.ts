@@ -13,6 +13,7 @@ export enum ServerEvents {
   GameMessagePriest = "server.game.message.priest",
   GameMessageBaronSelf = "server.game.message.baron_self",
   GameMessageBaronTarget = "server.game.message.baron_target",
+  GameMessagePrince = "server.game.message.prince",
   GameMessageKingSelf = "server.game.message.king_self",
   GameMessageKingTarget = "server.game.message.king_target",
   GameState = "server.game.state",

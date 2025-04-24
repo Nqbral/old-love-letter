@@ -9,12 +9,14 @@ import GuardNotification from '@components/notifications/GuardNotification';
 import KingNotificationSelf from '@components/notifications/KingNotificationSelf';
 import KingNotificationTarget from '@components/notifications/KingNotificationTarget';
 import PriestNotification from '@components/notifications/PriestNotification';
+import PrinceNotification from '@components/notifications/PrinceNotification';
 import { Listener } from '@components/websocket/types';
 import { reviver } from '@love-letter/shared/common/JsonHelper';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';
 import { Modal } from '@mui/material';
 import { Cards } from '@shared/common/Cards';
+import { ResultEvent } from '@shared/common/EventDescription';
 import { useEffect, useState } from 'react';
 import { Hearts } from 'react-loader-spinner';
 import { Slide, ToastContainer, toast } from 'react-toastify';
@@ -151,7 +153,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         hideProgressBar: true,
         closeButton: false,
         style: {
-          width: 300,
+          width: 400,
         },
         autoClose: 7000,
       });
@@ -170,7 +172,27 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         hideProgressBar: true,
         closeButton: false,
         style: {
-          width: 300,
+          width: data.result == ResultEvent.DrawBaron ? 200 : 400,
+        },
+        autoClose: 7000,
+      });
+    };
+
+    const onGameMessagePrince: Listener<
+      ServerPayloads[ServerEvents.GameMessagePrince]
+    > = (data) => {
+      toast(PrinceNotification, {
+        data: {
+          player: data.player,
+          playerTargeted: data.playerTargeted,
+          lostCard: data.lostCard,
+          drawedCard: data.drawedCard,
+          killedPlayer: data.killedPlayer,
+        },
+        hideProgressBar: true,
+        closeButton: false,
+        style: {
+          width: 400,
         },
         autoClose: 7000,
       });
@@ -188,7 +210,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         hideProgressBar: true,
         closeButton: false,
         style: {
-          width: 300,
+          width: 400,
         },
         autoClose: 7000,
       });
@@ -206,7 +228,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         hideProgressBar: true,
         closeButton: false,
         style: {
-          width: 300,
+          width: 400,
         },
         autoClose: 7000,
       });
@@ -234,6 +256,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
       ServerEvents.GameMessageBaronTarget,
       onGameMessageBaronTarget,
     );
+    sm.registerListener(ServerEvents.GameMessagePrince, onGameMessagePrince);
     sm.registerListener(
       ServerEvents.GameMessageKingSelf,
       onGameMessageKingSelf,
@@ -266,6 +289,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         ServerEvents.GameMessageBaronTarget,
         onGameMessageBaronTarget,
       );
+      sm.removeListener(ServerEvents.GameMessagePrince, onGameMessagePrince);
       sm.removeListener(
         ServerEvents.GameMessageKingSelf,
         onGameMessageKingSelf,
