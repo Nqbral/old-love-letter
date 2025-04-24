@@ -286,6 +286,18 @@ export class Instance {
             ResultEvent.KillPlayer,
             cardTarget,
           );
+
+          const payloadMessage: ServerPayloads[ServerEvents.GameMessageGuardKill] =
+            {
+              player: player,
+              cardGuessed: cardTarget,
+            };
+
+          this.lobby.dispatchToClient(
+            playerTargeted.id,
+            ServerEvents.GameMessageGuardKill,
+            payloadMessage,
+          );
           return;
         }
 
@@ -294,6 +306,18 @@ export class Instance {
           playerTargeted,
           ResultEvent.GuardNotGuessed,
           cardTarget,
+        );
+
+        const payloadMessage: ServerPayloads[ServerEvents.GameMessageGuardNotGuessed] =
+          {
+            player: player,
+            cardGuessed: cardTarget,
+          };
+
+        this.lobby.dispatchToClient(
+          playerTargeted.id,
+          ServerEvents.GameMessageGuardNotGuessed,
+          payloadMessage,
         );
 
         return;

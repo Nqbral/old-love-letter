@@ -1,7 +1,7 @@
 import { Cards } from "../common/Cards";
 import { EventDescription } from "../common/EventDescription";
 import { GameState } from "../common/GameState";
-import { PlayerLobby } from "../common/Player";
+import { PlayerGame, PlayerLobby } from "../common/Player";
 import { ServerEvents } from "./ServerEvents";
 
 export type ServerPayloads = {
@@ -31,6 +31,16 @@ export type ServerPayloads = {
   // Game
   [ServerEvents.GameMessage]: {
     message: string;
+  };
+
+  [ServerEvents.GameMessageGuardNotGuessed]: {
+    player: PlayerGame;
+    cardGuessed: Cards;
+  };
+
+  [ServerEvents.GameMessageGuardKill]: {
+    player: PlayerGame;
+    cardGuessed: Cards;
   };
 
   [ServerEvents.GamePriestPlayed]: {

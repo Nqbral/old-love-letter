@@ -3,6 +3,7 @@ import GameInformations from '@components/game/gamedisplay/GameInformations';
 import OtherPlayer from '@components/game/gamedisplay/OtherPlayer';
 import Player from '@components/game/gamedisplay/Player';
 import useSocketManager from '@components/hooks/useSocketManager';
+import GuardNotification from '@components/notifications/GuardNotification';
 import { Listener } from '@components/websocket/types';
 import { reviver } from '@love-letter/shared/common/JsonHelper';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
@@ -11,7 +12,7 @@ import { Modal } from '@mui/material';
 import { Cards } from '@shared/common/Cards';
 import { useEffect, useState } from 'react';
 import { Hearts } from 'react-loader-spinner';
-import { Slide, ToastContainer } from 'react-toastify';
+import { Slide, ToastContainer, toast } from 'react-toastify';
 
 import ModalChancellorPartTwo from './gamedisplay/showmodals/ModalChancellorPartTwo';
 import ModalPriestGuessed from './gamedisplay/showmodals/ModalPriestGuessed';
@@ -79,10 +80,56 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
       handleOpenChancellorPartTwo();
     };
 
+    const onGameMessageGuardNotGuessed: Listener<
+      ServerPayloads[ServerEvents.GameMessageGuardNotGuessed]
+    > = (data) => {
+      console.log('guard not guessed');
+      toast(GuardNotification, {
+        data: {
+          player: data.player,
+          card: data.cardGuessed,
+          killed: false,
+        },
+        hideProgressBar: true,
+        closeButton: false,
+        style: {
+          width: 400,
+        },
+        autoClose: 7000,
+      });
+    };
+
+    const onGameMessageGuardKill: Listener<
+      ServerPayloads[ServerEvents.GameMessageGuardKill]
+    > = (data) => {
+      console.log('guard kill');
+      toast(GuardNotification, {
+        data: {
+          player: data.player,
+          card: data.cardGuessed,
+          killed: true,
+        },
+        hideProgressBar: true,
+        closeButton: false,
+        style: {
+          width: 400,
+        },
+        autoClose: 7000,
+      });
+    };
+
     sm.registerListener(ServerEvents.GamePriestPlayed, onGamePriestPlayed);
     sm.registerListener(
       ServerEvents.GameChancellorPlayed,
       onGameChancellorPlayed,
+    );
+    sm.registerListener(
+      ServerEvents.GameMessageGuardNotGuessed,
+      onGameMessageGuardNotGuessed,
+    );
+    sm.registerListener(
+      ServerEvents.GameMessageGuardKill,
+      onGameMessageGuardKill,
     );
 
     return () => {
@@ -90,6 +137,14 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
       sm.removeListener(
         ServerEvents.GameChancellorPlayed,
         onGameChancellorPlayed,
+      );
+      sm.removeListener(
+        ServerEvents.GameMessageGuardNotGuessed,
+        onGameMessageGuardNotGuessed,
+      );
+      sm.removeListener(
+        ServerEvents.GameMessageGuardKill,
+        onGameMessageGuardKill,
       );
     };
   }, []);

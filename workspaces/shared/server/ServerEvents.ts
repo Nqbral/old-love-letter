@@ -8,6 +8,8 @@ export enum ServerEvents {
 
   // Game
   GameMessage = "server.game.message",
+  GameMessageGuardNotGuessed = "server.game.message.guard.not_guessed",
+  GameMessageGuardKill = "server.game.message.guard.kill",
   GameState = "server.game.state",
   GamePriestPlayed = "server.game.priest.played",
   GameChancellorPlayed = "server.game.chancellor.played",

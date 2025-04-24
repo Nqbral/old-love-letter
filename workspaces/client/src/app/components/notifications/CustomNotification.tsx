@@ -15,10 +15,7 @@ type CustomNotificationProps = ToastContentProps<{
   content: string;
 }>;
 
-export default function CustomNotification({
-  data,
-  toastProps,
-}: CustomNotificationProps) {
+export default function CustomNotification({ data }: CustomNotificationProps) {
   return (
     <div className={`${medievalsharp.className}`}>
       <div className="flex w-full flex-col items-center gap-4">
