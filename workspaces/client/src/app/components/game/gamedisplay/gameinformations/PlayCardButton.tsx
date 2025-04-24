@@ -37,7 +37,7 @@ export default function PlayCardButton({
     toast(CustomNotification, {
       data: {
         title: 'Erreur de jeu',
-        content: "Ce n'est pas à votre tour de jouer",
+        content: "Ce n'est pas à votre tour de jouer.",
       },
       hideProgressBar: true,
       closeButton: false,

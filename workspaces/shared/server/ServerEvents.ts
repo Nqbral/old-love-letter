@@ -11,6 +11,8 @@ export enum ServerEvents {
   GameMessageGuardNotGuessed = "server.game.message.guard.not_guessed",
   GameMessageGuardKill = "server.game.message.guard.kill",
   GameMessagePriest = "server.game.message.priest",
+  GameMessageKingSelf = "server.game.message.king_self",
+  GameMessageKingTarget = "server.game.message.king_target",
   GameState = "server.game.state",
   GamePriestPlayed = "server.game.priest.played",
   GameChancellorPlayed = "server.game.chancellor.played",

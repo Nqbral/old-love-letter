@@ -4,6 +4,8 @@ import OtherPlayer from '@components/game/gamedisplay/OtherPlayer';
 import Player from '@components/game/gamedisplay/Player';
 import useSocketManager from '@components/hooks/useSocketManager';
 import GuardNotification from '@components/notifications/GuardNotification';
+import KingNotificationSelf from '@components/notifications/KingNotificationSelf';
+import KingNotificationTarget from '@components/notifications/KingNotificationTarget';
 import PriestNotification from '@components/notifications/PriestNotification';
 import { Listener } from '@components/websocket/types';
 import { reviver } from '@love-letter/shared/common/JsonHelper';
@@ -123,6 +125,43 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
       toast(PriestNotification, {
         data: {
           player: data.player,
+          card: data.card,
+        },
+        hideProgressBar: true,
+        closeButton: false,
+        style: {
+          width: 300,
+        },
+        autoClose: 7000,
+      });
+    };
+
+    const onGameMessageKingSelf: Listener<
+      ServerPayloads[ServerEvents.GameMessageKingSelf]
+    > = (data) => {
+      toast(KingNotificationSelf, {
+        data: {
+          playerTargeted: data.playerTargeted,
+          cardPlayer: data.cardPlayer,
+          cardPlayerTargeted: data.cardPlayerTargeted,
+        },
+        hideProgressBar: true,
+        closeButton: false,
+        style: {
+          width: 300,
+        },
+        autoClose: 7000,
+      });
+    };
+
+    const onGameMessageKingTarget: Listener<
+      ServerPayloads[ServerEvents.GameMessageKingTarget]
+    > = (data) => {
+      toast(KingNotificationTarget, {
+        data: {
+          player: data.player,
+          cardPlayer: data.cardPlayer,
+          cardPlayerTargeted: data.cardPlayerTargeted,
         },
         hideProgressBar: true,
         closeButton: false,
@@ -147,6 +186,14 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
       onGameMessageGuardKill,
     );
     sm.registerListener(ServerEvents.GameMessagePriest, onGameMessagePriest);
+    sm.registerListener(
+      ServerEvents.GameMessageKingSelf,
+      onGameMessageKingSelf,
+    );
+    sm.registerListener(
+      ServerEvents.GameMessageKingTarget,
+      onGameMessageKingTarget,
+    );
 
     return () => {
       sm.removeListener(ServerEvents.GamePriestPlayed, onGamePriestPlayed);
@@ -163,6 +210,14 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         onGameMessageGuardKill,
       );
       sm.removeListener(ServerEvents.GameMessagePriest, onGameMessagePriest);
+      sm.removeListener(
+        ServerEvents.GameMessageKingSelf,
+        onGameMessageKingSelf,
+      );
+      sm.removeListener(
+        ServerEvents.GameMessageKingTarget,
+        onGameMessageKingTarget,
+      );
     };
   }, []);
 

@@ -14,22 +14,28 @@ const medievalsharp = MedievalSharp({
 });
 
 type Props = ToastContentProps<{
-  player: PlayerGame;
-  card: Cards;
+  playerTargeted: PlayerGame;
+  cardPlayer: Cards;
+  cardPlayerTargeted: Cards;
 }>;
 
-export default function PriestNotification({ data }: Props) {
-  let cardShow = articleCard(data.card)?.get('card');
-  let articleCardShow = articleCard(data.card)?.get('articleCard');
+export default function KingNotificationSelf({ data }: Props) {
+  let cardPlayer = articleCard(data.cardPlayer)?.get('card');
+  let cardPlayerTargeted = articleCard(data.cardPlayerTargeted)?.get('card');
+
   return (
     <div className={`${medievalsharp.className}`}>
       <div className="flex w-full flex-col items-center gap-4 text-center">
         <h3 className="text-primary text-lg">Action de jeu</h3>
         <div className="w-full text-center text-sm text-white">
-          <span className={data.player.color}>{data.player.playerName}</span>{' '}
-          regarde votre main avec un <span className="font-bold">Prêtre</span>{' '}
-          et sait que vous avez {articleCardShow}
-          <span className="font-bold">{cardShow}</span> dans votre main.
+          Vous avez échangé votre main avec{' '}
+          <span className={data.playerTargeted.color}>
+            {data.playerTargeted.playerName}
+          </span>
+          <br />
+          Votre <span className="font-bold">{cardPlayer}</span> que vous aviez
+          dans votre main va dans la sienne et vous récupérer la carte{' '}
+          <span className="font-bold">{cardPlayerTargeted}</span>.
         </div>
       </div>
     </div>

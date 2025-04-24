@@ -358,6 +358,7 @@ export class Instance {
 
         const payloadMessage: ServerPayloads[ServerEvents.GameMessagePriest] = {
           player: player,
+          card: playerTargeted.cards[0],
         };
 
         this.lobby.dispatchToClient(
@@ -631,8 +632,34 @@ export class Instance {
           return card != Cards.King;
         });
 
+        const payloadMessageSelf: ServerPayloads[ServerEvents.GameMessageKingSelf] =
+          {
+            playerTargeted: playerTargeted,
+            cardPlayer: myPlayerCard[0],
+            cardPlayerTargeted: playerTargeted.cards[0],
+          };
+
+        const payloadMessageTarget: ServerPayloads[ServerEvents.GameMessageKingTarget] =
+          {
+            player: player,
+            cardPlayer: myPlayerCard[0],
+            cardPlayerTargeted: playerTargeted.cards[0],
+          };
+
         player.cards = playerTargeted.cards;
         playerTargeted.cards = myPlayerCard;
+
+        this.lobby.dispatchToClient(
+          player.id,
+          ServerEvents.GameMessageKingSelf,
+          payloadMessageSelf,
+        );
+
+        this.lobby.dispatchToClient(
+          playerTargeted.id,
+          ServerEvents.GameMessageKingTarget,
+          payloadMessageTarget,
+        );
 
         this.eventDescription = EventDescription.fromKing(
           player,

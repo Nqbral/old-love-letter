@@ -45,6 +45,19 @@ export type ServerPayloads = {
 
   [ServerEvents.GameMessagePriest]: {
     player: PlayerGame;
+    card: Cards;
+  };
+
+  [ServerEvents.GameMessageKingSelf]: {
+    playerTargeted: PlayerGame;
+    cardPlayer: Cards;
+    cardPlayerTargeted: Cards;
+  };
+
+  [ServerEvents.GameMessageKingTarget]: {
+    player: PlayerGame;
+    cardPlayer: Cards;
+    cardPlayerTargeted: Cards;
   };
 
   [ServerEvents.GamePriestPlayed]: {
