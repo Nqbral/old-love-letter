@@ -356,6 +356,16 @@ export class Instance {
           payload,
         );
 
+        const payloadMessage: ServerPayloads[ServerEvents.GameMessagePriest] = {
+          player: player,
+        };
+
+        this.lobby.dispatchToClient(
+          playerTargeted.id,
+          ServerEvents.GameMessagePriest,
+          payloadMessage,
+        );
+
         this.eventDescription = EventDescription.fromPriest(
           player,
           playerTargeted,

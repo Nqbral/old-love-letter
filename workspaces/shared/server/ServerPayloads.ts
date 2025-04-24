@@ -43,6 +43,10 @@ export type ServerPayloads = {
     cardGuessed: Cards;
   };
 
+  [ServerEvents.GameMessagePriest]: {
+    player: PlayerGame;
+  };
+
   [ServerEvents.GamePriestPlayed]: {
     cardGuessed: Cards;
     playerGuessedName: string;

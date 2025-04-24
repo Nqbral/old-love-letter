@@ -67,6 +67,8 @@ export default function PlayModalPriest({
         noEffect: false,
       },
     });
+
+    backButton();
   };
 
   const backButton = () => {

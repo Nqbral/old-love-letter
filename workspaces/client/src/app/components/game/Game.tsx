@@ -4,6 +4,7 @@ import OtherPlayer from '@components/game/gamedisplay/OtherPlayer';
 import Player from '@components/game/gamedisplay/Player';
 import useSocketManager from '@components/hooks/useSocketManager';
 import GuardNotification from '@components/notifications/GuardNotification';
+import PriestNotification from '@components/notifications/PriestNotification';
 import { Listener } from '@components/websocket/types';
 import { reviver } from '@love-letter/shared/common/JsonHelper';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
@@ -83,7 +84,6 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
     const onGameMessageGuardNotGuessed: Listener<
       ServerPayloads[ServerEvents.GameMessageGuardNotGuessed]
     > = (data) => {
-      console.log('guard not guessed');
       toast(GuardNotification, {
         data: {
           player: data.player,
@@ -102,7 +102,6 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
     const onGameMessageGuardKill: Listener<
       ServerPayloads[ServerEvents.GameMessageGuardKill]
     > = (data) => {
-      console.log('guard kill');
       toast(GuardNotification, {
         data: {
           player: data.player,
@@ -113,6 +112,22 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         closeButton: false,
         style: {
           width: 400,
+        },
+        autoClose: 7000,
+      });
+    };
+
+    const onGameMessagePriest: Listener<
+      ServerPayloads[ServerEvents.GameMessagePriest]
+    > = (data) => {
+      toast(PriestNotification, {
+        data: {
+          player: data.player,
+        },
+        hideProgressBar: true,
+        closeButton: false,
+        style: {
+          width: 300,
         },
         autoClose: 7000,
       });
@@ -131,6 +146,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
       ServerEvents.GameMessageGuardKill,
       onGameMessageGuardKill,
     );
+    sm.registerListener(ServerEvents.GameMessagePriest, onGameMessagePriest);
 
     return () => {
       sm.removeListener(ServerEvents.GamePriestPlayed, onGamePriestPlayed);
@@ -146,6 +162,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         ServerEvents.GameMessageGuardKill,
         onGameMessageGuardKill,
       );
+      sm.removeListener(ServerEvents.GameMessagePriest, onGameMessagePriest);
     };
   }, []);
 
