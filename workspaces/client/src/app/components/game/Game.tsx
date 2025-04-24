@@ -3,6 +3,8 @@ import GameInformations from '@components/game/gamedisplay/GameInformations';
 import OtherPlayer from '@components/game/gamedisplay/OtherPlayer';
 import Player from '@components/game/gamedisplay/Player';
 import useSocketManager from '@components/hooks/useSocketManager';
+import BaronNotificationSelf from '@components/notifications/BaronNotificationSelf';
+import BaronNotificationTarget from '@components/notifications/BaronNotificationTarget';
 import GuardNotification from '@components/notifications/GuardNotification';
 import KingNotificationSelf from '@components/notifications/KingNotificationSelf';
 import KingNotificationTarget from '@components/notifications/KingNotificationTarget';
@@ -136,6 +138,44 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
       });
     };
 
+    const onGameMessageBaronSelf: Listener<
+      ServerPayloads[ServerEvents.GameMessageBaronSelf]
+    > = (data) => {
+      toast(BaronNotificationSelf, {
+        data: {
+          playerTargeted: data.playerTargeted,
+          cardPlayer: data.cardPlayer,
+          cardPlayerTargeted: data.cardPlayerTargeted,
+          result: data.result,
+        },
+        hideProgressBar: true,
+        closeButton: false,
+        style: {
+          width: 300,
+        },
+        autoClose: 7000,
+      });
+    };
+
+    const onGameMessageBaronTarget: Listener<
+      ServerPayloads[ServerEvents.GameMessageBaronTarget]
+    > = (data) => {
+      toast(BaronNotificationTarget, {
+        data: {
+          player: data.player,
+          cardPlayer: data.cardPlayer,
+          cardPlayerTargeted: data.cardPlayerTargeted,
+          result: data.result,
+        },
+        hideProgressBar: true,
+        closeButton: false,
+        style: {
+          width: 300,
+        },
+        autoClose: 7000,
+      });
+    };
+
     const onGameMessageKingSelf: Listener<
       ServerPayloads[ServerEvents.GameMessageKingSelf]
     > = (data) => {
@@ -187,6 +227,14 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
     );
     sm.registerListener(ServerEvents.GameMessagePriest, onGameMessagePriest);
     sm.registerListener(
+      ServerEvents.GameMessageBaronSelf,
+      onGameMessageBaronSelf,
+    );
+    sm.registerListener(
+      ServerEvents.GameMessageBaronTarget,
+      onGameMessageBaronTarget,
+    );
+    sm.registerListener(
       ServerEvents.GameMessageKingSelf,
       onGameMessageKingSelf,
     );
@@ -210,6 +258,14 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         onGameMessageGuardKill,
       );
       sm.removeListener(ServerEvents.GameMessagePriest, onGameMessagePriest);
+      sm.removeListener(
+        ServerEvents.GameMessageBaronSelf,
+        onGameMessageBaronSelf,
+      );
+      sm.removeListener(
+        ServerEvents.GameMessageBaronTarget,
+        onGameMessageBaronTarget,
+      );
       sm.removeListener(
         ServerEvents.GameMessageKingSelf,
         onGameMessageKingSelf,

@@ -46,7 +46,7 @@ export default function EventDescriptionBaron({ eventDescription }: Props) {
           <span className={eventDescription?.playerTargeted?.color}>
             {eventDescription?.playerTargeted?.playerName}
           </span>{' '}
-          qui perds avec {articleCardKilled}
+          qui perd avec {articleCardKilled}
           <span className="font-bold">{cardKilled}</span>.
         </div>
       )}
@@ -55,7 +55,7 @@ export default function EventDescriptionBaron({ eventDescription }: Props) {
           <span className={eventDescription?.player.color}>
             {eventDescription?.player.playerName}
           </span>{' '}
-          perds contre{' '}
+          perd contre{' '}
           <span className={eventDescription?.playerTargeted?.color}>
             {eventDescription?.playerTargeted?.playerName}
           </span>{' '}

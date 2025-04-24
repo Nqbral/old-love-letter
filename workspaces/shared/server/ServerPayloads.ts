@@ -1,5 +1,5 @@
 import { Cards } from "../common/Cards";
-import { EventDescription } from "../common/EventDescription";
+import { EventDescription, ResultEvent } from "../common/EventDescription";
 import { GameState } from "../common/GameState";
 import { PlayerGame, PlayerLobby } from "../common/Player";
 import { ServerEvents } from "./ServerEvents";
@@ -46,6 +46,20 @@ export type ServerPayloads = {
   [ServerEvents.GameMessagePriest]: {
     player: PlayerGame;
     card: Cards;
+  };
+
+  [ServerEvents.GameMessageBaronSelf]: {
+    playerTargeted: PlayerGame;
+    cardPlayer: Cards;
+    cardPlayerTargeted: Cards;
+    result: ResultEvent;
+  };
+
+  [ServerEvents.GameMessageBaronTarget]: {
+    player: PlayerGame;
+    cardPlayer: Cards;
+    cardPlayerTargeted: Cards;
+    result: ResultEvent;
   };
 
   [ServerEvents.GameMessageKingSelf]: {

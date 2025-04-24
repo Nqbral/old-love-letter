@@ -2,7 +2,11 @@ import { Lobby } from '@app/game/lobby/lobby';
 import { ServerException } from '@app/game/server.exception';
 import { AuthenticatedSocket } from '@app/game/types';
 import { Cards, CardsNumber, CardsValue } from '@shared/common/Cards';
-import { EventDescription, ResultEvent } from '@shared/common/EventDescription';
+import {
+  EventDescription,
+  ResultEvent,
+  TypeEvent,
+} from '@shared/common/EventDescription';
 import { GameState } from '@shared/common/GameState';
 import { replacer } from '@shared/common/JsonHelper';
 import { PlayerGame } from '@shared/common/Player';
@@ -406,6 +410,22 @@ export class Instance {
         let playerTargetedValue = CardsValue[playerTargeted.cards[0]];
 
         if (myPlayerValue > playerTargetedValue) {
+          const payloadMessageSelf: ServerPayloads[ServerEvents.GameMessageBaronSelf] =
+            {
+              playerTargeted: playerTargeted,
+              cardPlayer: player.cards[indexOtherCards],
+              cardPlayerTargeted: playerTargeted.cards[0],
+              result: ResultEvent.VictoryBaron,
+            };
+
+          const payloadMessageTarget: ServerPayloads[ServerEvents.GameMessageBaronTarget] =
+            {
+              player: player,
+              cardPlayer: player.cards[indexOtherCards],
+              cardPlayerTargeted: playerTargeted.cards[0],
+              result: ResultEvent.LooseBaron,
+            };
+
           this.secondPlayedCard = playerTargeted.cards[0];
           this.eventDescription = EventDescription.fromBaron(
             player,
@@ -413,11 +433,39 @@ export class Instance {
             ResultEvent.VictoryBaron,
             playerTargeted.cards[0],
           );
+
+          this.lobby.dispatchToClient(
+            player.id,
+            ServerEvents.GameMessageBaronSelf,
+            payloadMessageSelf,
+          );
+
+          this.lobby.dispatchToClient(
+            playerTargeted.id,
+            ServerEvents.GameMessageBaronTarget,
+            payloadMessageTarget,
+          );
           this.killPlayer(playerIdTarget);
           return;
         }
 
         if (myPlayerValue < playerTargetedValue) {
+          const payloadMessageSelf: ServerPayloads[ServerEvents.GameMessageBaronSelf] =
+            {
+              playerTargeted: playerTargeted,
+              cardPlayer: player.cards[indexOtherCards],
+              cardPlayerTargeted: playerTargeted.cards[0],
+              result: ResultEvent.LooseBaron,
+            };
+
+          const payloadMessageTarget: ServerPayloads[ServerEvents.GameMessageBaronTarget] =
+            {
+              player: player,
+              cardPlayer: player.cards[indexOtherCards],
+              cardPlayerTargeted: playerTargeted.cards[0],
+              result: ResultEvent.VictoryBaron,
+            };
+
           this.secondPlayedCard = player.cards[indexOtherCards];
           this.eventDescription = EventDescription.fromBaron(
             player,
@@ -425,15 +473,55 @@ export class Instance {
             ResultEvent.LooseBaron,
             player.cards[indexOtherCards],
           );
+
+          this.lobby.dispatchToClient(
+            player.id,
+            ServerEvents.GameMessageBaronSelf,
+            payloadMessageSelf,
+          );
+
+          this.lobby.dispatchToClient(
+            playerTargeted.id,
+            ServerEvents.GameMessageBaronTarget,
+            payloadMessageTarget,
+          );
           this.killPlayer(player.id);
           return;
         }
+
+        const payloadMessageSelf: ServerPayloads[ServerEvents.GameMessageBaronSelf] =
+          {
+            playerTargeted: playerTargeted,
+            cardPlayer: player.cards[indexOtherCards],
+            cardPlayerTargeted: playerTargeted.cards[0],
+            result: ResultEvent.DrawBaron,
+          };
+
+        const payloadMessageTarget: ServerPayloads[ServerEvents.GameMessageBaronTarget] =
+          {
+            player: player,
+            cardPlayer: player.cards[indexOtherCards],
+            cardPlayerTargeted: playerTargeted.cards[0],
+            result: ResultEvent.DrawBaron,
+          };
 
         this.eventDescription = EventDescription.fromBaron(
           player,
           playerTargeted,
           ResultEvent.DrawBaron,
           undefined,
+        );
+
+        this.lobby.dispatchToClient(
+          player.id,
+          ServerEvents.GameMessageBaronSelf,
+          payloadMessageSelf,
+        );
+
+        this.lobby.dispatchToClient(
+          playerTargeted.id,
+          ServerEvents.GameMessageBaronTarget,
+          payloadMessageTarget,
         );
 
         return;
