@@ -11,12 +11,12 @@ type Props = {
   gameState: ServerPayloads[ServerEvents.GameState];
 };
 
-export default function PlayModalPrincess({ handleClose, gameState }: Props) {
+export default function PlayModalChancellor({ handleClose, gameState }: Props) {
   const { sm } = useSocketManager();
 
-  const playPrincess = () => {
+  const playChancellor = () => {
     sm.emit({
-      event: ClientEvents.GamePlayPrincess,
+      event: ClientEvents.GamePlayChancellor,
       data: {
         lobbyId: gameState.lobbyId,
       },
@@ -29,15 +29,15 @@ export default function PlayModalPrincess({ handleClose, gameState }: Props) {
     <ModalTemplate>
       <div className="flex w-2xl flex-col items-center gap-6 text-center">
         <h2 className="text-secondary-hover pb-2 text-2xl">
-          Jouer la Princesse
+          Jouer le chancelier
         </h2>
         <p className="text-primary-hover mt-8">
-          Jouer la Princesse vous fera mourir !
+          Il n'y a aucune carte dans le deck, l'action sera sans effet.
         </p>
         <div className="flex flex-row gap-12">
           <PrimaryButton
             buttonText="Mourir"
-            onClick={playPrincess}
+            onClick={playChancellor}
             disabled={false}
           />
           <SecondaryButton

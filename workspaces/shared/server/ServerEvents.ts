@@ -10,6 +10,7 @@ export enum ServerEvents {
   GameMessage = "server.game.message",
   GameState = "server.game.state",
   GamePriestPlayed = "server.game.priest.played",
+  GameChancellorPlayed = "server.game.chancellor.played",
 
   // Exceptions
   LobbyError = "server.lobby.error",

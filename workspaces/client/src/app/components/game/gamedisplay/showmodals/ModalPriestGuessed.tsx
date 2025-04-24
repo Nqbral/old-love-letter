@@ -18,7 +18,7 @@ export default function ModalPriestGuessed({
   return (
     <ModalTemplate>
       <div className="flex w-2xl flex-col items-center gap-6 text-center">
-        <h2 className="text-secondary-hover pb-2 text-2xl">Jouer le prêtre</h2>
+        <h2 className="text-secondary-hover pb-2 text-2xl">Jouer le Prêtre</h2>
         <p>
           Vous regardez la main de{' '}
           <span className={gamePriestPlayed.playerGuessedColor}>

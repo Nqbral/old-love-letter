@@ -42,7 +42,7 @@ export default function PlayPrinceButton({
         data: {
           title: 'Erreur de jeu',
           content:
-            'Vous ne pouvez pas jouer le prince si vous possédez la comtesse.',
+            'Vous ne pouvez pas jouer le Prince si vous possédez la Comtesse.',
         },
         hideProgressBar: true,
         closeButton: false,

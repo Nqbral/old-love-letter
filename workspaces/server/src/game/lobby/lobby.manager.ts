@@ -10,7 +10,11 @@ import { ServerPayloads } from '@shared/server/ServerPayloads';
 import { SocketExceptions } from '@shared/server/SocketExceptions';
 import { Server } from 'socket.io';
 
-import { PlayBaronGameDto, PlayCardGameDto } from '../dtos';
+import {
+  PlayBaronGameDto,
+  PlayCardGameDto,
+  PlayChancellorPartTwoDto,
+} from '../dtos';
 
 export class LobbyManager {
   public server: Server;
@@ -109,6 +113,16 @@ export class LobbyManager {
     const lobby = this.getLobby(lobbyId, client);
 
     lobby.instance.playCard(client, card, data);
+  }
+
+  public playChancellorPartTwo(
+    lobbyId: string,
+    client: AuthenticatedSocket,
+    data: PlayChancellorPartTwoDto,
+  ): void {
+    const lobby = this.getLobby(lobbyId, client);
+
+    lobby.instance.playChancellorPartTwo(client.id, data);
   }
 
   // Periodically clean up lobbies

@@ -42,7 +42,7 @@ export default function PlayKingButton({
         data: {
           title: 'Erreur de jeu',
           content:
-            'Vous ne pouvez pas jouer le roi si vous possédez la comtesse.',
+            'Vous ne pouvez pas jouer le Roi si vous possédez la Comtesse.',
         },
         hideProgressBar: true,
         closeButton: false,

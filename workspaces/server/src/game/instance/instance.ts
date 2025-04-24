@@ -2,6 +2,7 @@ import { Lobby } from '@app/game/lobby/lobby';
 import { ServerException } from '@app/game/server.exception';
 import { AuthenticatedSocket } from '@app/game/types';
 import { Cards, CardsNumber, CardsValue } from '@shared/common/Cards';
+import { EventDescription, ResultEvent } from '@shared/common/EventDescription';
 import { GameState } from '@shared/common/GameState';
 import { replacer } from '@shared/common/JsonHelper';
 import { PlayerGame } from '@shared/common/Player';
@@ -11,7 +12,7 @@ import { SocketExceptions } from '@shared/server/SocketExceptions';
 import { isString } from 'class-validator';
 import { Socket } from 'socket.io';
 
-import { PlayBaronGameDto, PlayCardGameDto } from '../dtos';
+import { PlayChancellorPartTwoDto } from '../dtos';
 
 export class Instance {
   public currentRound: number = 1;
@@ -40,7 +41,11 @@ export class Instance {
 
   public lastPlayedCard: Cards | undefined;
 
+  public secondPlayedCard: Cards | undefined;
+
   public scoreToReach: number;
+
+  public eventDescription: EventDescription;
 
   constructor(private readonly lobby: Lobby) {}
 
@@ -184,54 +189,61 @@ export class Instance {
     let player = this.players.get(client.id);
 
     if (player != null) {
-      let indexPlayerCardPlayed = player.cards.findIndex((value) => {
-        return value == card;
-      });
+      let indexPlayerCardPlayed = player.cards.indexOf(card);
 
       if (indexPlayerCardPlayed != -1) {
+        this.secondPlayedCard = undefined;
+
         switch (card) {
           case Cards.Spy:
             this.playSpyCard(player);
             break;
           case Cards.Guard:
             this.playGuardCard(
+              player,
               data.playerIdTarget,
               data.cardTarget,
               data.noEffect,
             );
             break;
           case Cards.Priest:
-            this.playPriestCard(client.id, data.playerIdTarget, data.noEffect);
+            this.playPriestCard(player, data.playerIdTarget, data.noEffect);
             break;
           case Cards.Baron:
-            this.playBaronCard(client.id, data.playerIdTarget, data.noEffect);
+            this.playBaronCard(player, data.playerIdTarget, data.noEffect);
             break;
           case Cards.Handmaid:
             this.playHandmaidCard(player);
             break;
           case Cards.Prince:
-            this.playPrinceCard(client.id, data.playerIdTarget);
+            this.playPrinceCard(player, data.playerIdTarget);
             break;
           case Cards.Chancellor:
-            this.playChancellorCard();
+            this.playChancellorCard(player, indexPlayerCardPlayed);
             break;
           case Cards.King:
-            this.playKingCard(client.id, data.playerIdTarget, data.noEffect);
+            this.playKingCard(player, data.playerIdTarget, data.noEffect);
             break;
           case Cards.Countess:
+            this.eventDescription = EventDescription.fromCountess(player);
             break;
           case Cards.Princess:
-            this.playPrincessCard(client.id);
+            this.playPrincessCard(player);
             break;
         }
 
         if (card != Cards.Spy && card != Cards.Handmaid) {
           this.lastPlayedCard = card;
         }
-        player.cards.splice(indexPlayerCardPlayed, 1);
 
-        this.nextTurn();
-        this.playerDrawCard();
+        if (card != Cards.Chancellor) {
+          this.nextTurn();
+          this.playerDrawCard();
+          if (player.cards.indexOf(card) != -1) {
+            player.cards.splice(player.cards.indexOf(card), 1);
+          }
+        }
+
         this.dispatchGameState();
 
         return;
@@ -246,9 +258,12 @@ export class Instance {
 
   public playSpyCard(player: PlayerGame) {
     player.activeCards.push(Cards.Spy);
+
+    this.eventDescription = EventDescription.fromSpy(player);
   }
 
   public playGuardCard(
+    player: PlayerGame,
     playerIdTarget: string,
     cardTarget: Cards,
     noEffect: boolean,
@@ -263,13 +278,38 @@ export class Instance {
       if (playerTargeted != undefined) {
         if (playerTargeted.cards[0] == cardTarget) {
           this.killPlayer(playerIdTarget);
+          this.secondPlayedCard = cardTarget;
+
+          this.eventDescription = EventDescription.fromGuard(
+            player,
+            playerTargeted,
+            ResultEvent.KillPlayer,
+            cardTarget,
+          );
+          return;
         }
+
+        this.eventDescription = EventDescription.fromGuard(
+          player,
+          playerTargeted,
+          ResultEvent.GuardNotGuessed,
+          cardTarget,
+        );
+
+        return;
       }
     }
+
+    this.eventDescription = EventDescription.fromGuard(
+      player,
+      undefined,
+      ResultEvent.NoEffect,
+      undefined,
+    );
   }
 
   public playPriestCard(
-    clientId: string,
+    player: PlayerGame,
     playerIdTarget: string,
     noEffect: boolean,
   ) {
@@ -287,20 +327,32 @@ export class Instance {
           playerGuessedColor: playerTargeted.color,
         };
         this.lobby.dispatchToClient(
-          clientId,
+          player.id,
           ServerEvents.GamePriestPlayed,
           payload,
         );
+
+        this.eventDescription = EventDescription.fromPriest(
+          player,
+          playerTargeted,
+          undefined,
+        );
+        return;
       }
     }
+
+    this.eventDescription = EventDescription.fromPriest(
+      player,
+      undefined,
+      ResultEvent.NoEffect,
+    );
   }
 
   public playBaronCard(
-    clientId: string,
+    player: PlayerGame,
     playerIdTarget: string,
     noEffect: boolean,
   ) {
-    let myPlayer = this.players.get(clientId);
     let playerTargeted = this.players.get(playerIdTarget);
 
     if (playerTargeted != undefined) {
@@ -308,55 +360,108 @@ export class Instance {
     }
 
     if (!noEffect) {
-      if (myPlayer != undefined && playerTargeted != undefined) {
-        let myPlayerValue = CardsValue[myPlayer.cards[0]];
+      if (player != undefined && playerTargeted != undefined) {
+        let indexBaronPlayer = player.cards.indexOf(Cards.Baron);
+        let indexOtherCards = 0;
+
+        if (indexBaronPlayer == 0) {
+          indexOtherCards = 1;
+        }
+        let myPlayerValue = CardsValue[player.cards[indexOtherCards]];
         let playerTargetedValue = CardsValue[playerTargeted.cards[0]];
 
         if (myPlayerValue > playerTargetedValue) {
+          this.secondPlayedCard = playerTargeted.cards[0];
+          this.eventDescription = EventDescription.fromBaron(
+            player,
+            playerTargeted,
+            ResultEvent.VictoryBaron,
+            playerTargeted.cards[0],
+          );
           this.killPlayer(playerIdTarget);
+          return;
         }
 
         if (myPlayerValue < playerTargetedValue) {
-          this.killPlayer(clientId);
+          this.secondPlayedCard = player.cards[indexOtherCards];
+          this.eventDescription = EventDescription.fromBaron(
+            player,
+            playerTargeted,
+            ResultEvent.LooseBaron,
+            player.cards[indexOtherCards],
+          );
+          this.killPlayer(player.id);
+          return;
         }
 
-        if (myPlayerValue == playerTargetedValue) {
-        }
+        this.eventDescription = EventDescription.fromBaron(
+          player,
+          playerTargeted,
+          ResultEvent.DrawBaron,
+          undefined,
+        );
+
+        return;
       }
     }
+
+    this.eventDescription = EventDescription.fromBaron(
+      player,
+      playerTargeted,
+      ResultEvent.NoEffect,
+      undefined,
+    );
   }
 
   public playHandmaidCard(player: PlayerGame) {
     player.activeCards.push(Cards.Handmaid);
+    this.eventDescription = EventDescription.fromHandmaid(player);
   }
 
-  public playPrinceCard(clientId: string, playerIdTarget: string) {
-    let myPlayer = this.players.get(clientId);
-
-    if (
-      myPlayer != undefined &&
-      this.checkPlayerHasCard(myPlayer, Cards.Countess)
-    ) {
+  public playPrinceCard(player: PlayerGame, playerIdTarget: string) {
+    if (this.checkPlayerHasCard(player, Cards.Countess)) {
       throw new ServerException(
         SocketExceptions.GameError,
-        "Can't play a king while having a countess in the hand",
+        "Can't play a prince while having a countess in the hand",
       );
     }
 
     let playerTargeted = this.players.get(playerIdTarget);
 
-    if (playerTargeted != undefined && playerTargeted.id != clientId) {
+    if (playerTargeted != undefined && playerTargeted.id != player.id) {
       this.checkPlayerIsProtected(playerTargeted);
     }
 
     if (playerTargeted != undefined) {
       if (this.checkPlayerHasCard(playerTargeted, Cards.Princess)) {
         this.killPlayer(playerIdTarget);
+        this.secondPlayedCard = Cards.Princess;
+        this.eventDescription = EventDescription.fromPrince(
+          player,
+          playerTargeted,
+          undefined,
+          Cards.Princess,
+        );
 
         return;
       }
 
-      this.lastPlayedCard = playerTargeted.cards[0];
+      this.secondPlayedCard = playerTargeted.cards[0];
+
+      if (
+        player.id == playerTargeted.id &&
+        player.cards.indexOf(Cards.Prince) == 0
+      ) {
+        this.secondPlayedCard = player.cards[1];
+      }
+
+      this.eventDescription = EventDescription.fromPrince(
+        player,
+        playerTargeted,
+        this.secondPlayedCard,
+        undefined,
+      );
+
       playerTargeted.cards = [];
 
       if (this.deck.length == 0) {
@@ -375,19 +480,105 @@ export class Instance {
     }
   }
 
-  public playChancellorCard() {}
+  public playChancellorCard(player: PlayerGame, indexPlayerCardPlayed: number) {
+    if (this.deck.length == 1) {
+      let drawCard = this.deck.pop();
 
-  public playKingCard(
+      if (drawCard != undefined && player != undefined) {
+        player.cards.push(drawCard);
+      }
+
+      if (indexPlayerCardPlayed != -1) {
+        player.cards.splice(indexPlayerCardPlayed, 1);
+      }
+
+      this.eventDescription = EventDescription.fromChancellor(player, 1);
+
+      const payload: ServerPayloads[ServerEvents.GameChancellorPlayed] = {
+        nbCardsToDiscard: 1,
+        cards: player.cards,
+      };
+
+      this.lobby.dispatchToClient(
+        player.id,
+        ServerEvents.GameChancellorPlayed,
+        payload,
+      );
+
+      return;
+    }
+
+    if (this.deck.length >= 2) {
+      let drawCardOne = this.deck.pop();
+      let drawCardTwo = this.deck.pop();
+
+      if (drawCardOne != undefined && drawCardTwo != undefined) {
+        player.cards.push(drawCardOne);
+        player.cards.push(drawCardTwo);
+      }
+
+      if (indexPlayerCardPlayed != -1) {
+        player.cards.splice(indexPlayerCardPlayed, 1);
+      }
+
+      const payload: ServerPayloads[ServerEvents.GameChancellorPlayed] = {
+        nbCardsToDiscard: 2,
+        cards: player.cards,
+      };
+
+      this.lobby.dispatchToClient(
+        player.id,
+        ServerEvents.GameChancellorPlayed,
+        payload,
+      );
+
+      this.eventDescription = EventDescription.fromChancellor(player, 2);
+
+      return;
+    }
+
+    this.eventDescription = EventDescription.fromChancellor(player, 0);
+
+    this.nextTurn();
+    this.playerDrawCard();
+    if (player.cards.indexOf(Cards.Chancellor) != -1) {
+      player.cards.splice(player.cards.indexOf(Cards.Chancellor), 1);
+    }
+  }
+
+  public playChancellorPartTwo(
     clientId: string,
-    playerIdTarget: string,
-    noEffect: boolean,
+    data: PlayChancellorPartTwoDto,
   ) {
     let myPlayer = this.players.get(clientId);
 
-    if (
-      myPlayer != undefined &&
-      this.checkPlayerHasCard(myPlayer, Cards.Countess)
-    ) {
+    if (myPlayer != undefined) {
+      data.indexCardsDiscarded.forEach((indexCardToDiscard) => {
+        let card = myPlayer.cards[indexCardToDiscard];
+        this.deck.unshift(card);
+      });
+
+      data.cardsDiscarded.forEach((cardDiscarded) => {
+        myPlayer.cards.splice(myPlayer.cards.indexOf(cardDiscarded), 1);
+      });
+
+      this.eventDescription = EventDescription.fromChancellorPartTwo(
+        myPlayer,
+        data.indexCardsDiscarded.length,
+      );
+
+      this.nextTurn();
+      this.playerDrawCard();
+      this.dispatchGameState();
+    }
+  }
+
+  public playKingCard(
+    player: PlayerGame,
+    playerIdTarget: string,
+    noEffect: boolean,
+  ) {
+    if (this.checkPlayerHasCard(player, Cards.Countess)) {
       throw new ServerException(
         SocketExceptions.GameError,
         "Can't play a king while having a countess in the hand",
@@ -401,19 +592,43 @@ export class Instance {
     }
 
     if (!noEffect) {
-      if (myPlayer != undefined && playerTargeted != undefined) {
-        let myPlayerCard = myPlayer.cards.filter((card) => {
+      if (player != undefined && playerTargeted != undefined) {
+        let myPlayerCard = player.cards.filter((card) => {
           return card != Cards.King;
         });
 
-        myPlayer.cards = playerTargeted.cards;
+        player.cards = playerTargeted.cards;
         playerTargeted.cards = myPlayerCard;
+
+        this.eventDescription = EventDescription.fromKing(
+          player,
+          playerTargeted,
+          undefined,
+        );
+        return;
       }
     }
+
+    this.eventDescription = EventDescription.fromKing(
+      player,
+      undefined,
+      ResultEvent.NoEffect,
+    );
   }
 
-  public playPrincessCard(clientId: string) {
-    this.killPlayer(clientId);
+  public playPrincessCard(player: PlayerGame) {
+    let indexPrincessPlayer = player.cards.indexOf(Cards.Baron);
+    let indexOtherCards = 0;
+
+    if (indexPrincessPlayer == 0) {
+      indexOtherCards = 1;
+    }
+
+    this.secondPlayedCard = player.cards[indexOtherCards];
+
+    this.killPlayer(player.id);
+
+    this.eventDescription = EventDescription.fromPrincess(player);
   }
 
   public checkPlayerHasCard(player: PlayerGame, card: Cards): boolean {
@@ -487,6 +702,7 @@ export class Instance {
       playerTurn: this.playerTurn,
       playersTurnOrder: this.playersTurnOrder,
       deck: this.deck,
+      eventDescription: this.eventDescription,
     };
 
     this.lobby.dispatchToLobby(ServerEvents.GameState, payload);

@@ -4,6 +4,7 @@ import {
   LobbyRenamePlayerDto,
   PlayBaronGameDto,
   PlayCardGameDto,
+  PlayChancellorPartTwoDto,
   PlayGuardGameDto,
   PlayKingGameDto,
   PlayPriestGameDto,
@@ -142,6 +143,14 @@ export class GameGateway implements OnGatewayConnection {
   @SubscribeMessage(ClientEvents.GamePlayChancellor)
   onPlayChancellor(client: AuthenticatedSocket, data: PlayCardGameDto): void {
     this.lobbyManager.playCard(data.lobbyId, Cards.Chancellor, client, data);
+  }
+
+  @SubscribeMessage(ClientEvents.GamePlayChancellorPartTwo)
+  onPlayChancellorPartTwo(
+    client: AuthenticatedSocket,
+    data: PlayChancellorPartTwoDto,
+  ): void {
+    this.lobbyManager.playChancellorPartTwo(data.lobbyId, client, data);
   }
 
   @SubscribeMessage(ClientEvents.GamePlayKing)

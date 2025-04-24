@@ -1,3 +1,4 @@
+import { Cards } from '@shared/common/Cards';
 import { IsBoolean, IsInt, IsString, Max, Min } from 'class-validator';
 
 //Lobby
@@ -65,6 +66,11 @@ export class PlayBaronGameDto extends PlayCardGameDto {
 
   @IsBoolean()
   noEffect: boolean;
+}
+
+export class PlayChancellorPartTwoDto extends PlayCardGameDto {
+  indexCardsDiscarded: number[];
+  cardsDiscarded: Cards[];
 }
 
 export class PlayPrinceGameDto extends PlayCardGameDto {

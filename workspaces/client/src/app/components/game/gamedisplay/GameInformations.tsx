@@ -6,6 +6,7 @@ import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
 import { useState } from 'react';
 
+import EventDescriptionDisplay from './EventDescriptionDisplay';
 import ModalHelpCards from './gameinformations/ModalHelpCards';
 import PlayCardButton from './gameinformations/PlayCardButton';
 
@@ -39,6 +40,7 @@ export default function GameInformations({
         <h1 className="text-primary text-4xl">Lobby "test"</h1>
         <hr className="my-12 w-32 border-1 border-slate-700" />
         <h2 className="text-secondary-hover pb-4 text-xl">Actions</h2>
+        {myPlayer.cards.length == 0 && <div>Vous n'êtes plus en lice.</div>}
         {myPlayer.cards.map((card, index) => {
           return (
             <PlayCardButton
@@ -74,7 +76,9 @@ export default function GameInformations({
         <h2 className="text-secondary-hover pb-4 text-xl">
           Ancien tour de jeu
         </h2>
-        <p>Aucun joueur n'a joué pour le moment</p>
+        <EventDescriptionDisplay
+          eventDescription={gameState.eventDescription}
+        />
         <hr className="my-12 w-32 border-1 border-slate-700" />
         <SecondaryButton
           buttonText="Aides de jeu"

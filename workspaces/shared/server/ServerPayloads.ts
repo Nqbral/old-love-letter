@@ -1,4 +1,5 @@
 import { Cards } from "../common/Cards";
+import { EventDescription } from "../common/EventDescription";
 import { GameState } from "../common/GameState";
 import { PlayerLobby } from "../common/Player";
 import { ServerEvents } from "./ServerEvents";
@@ -38,6 +39,11 @@ export type ServerPayloads = {
     playerGuessedColor: string;
   };
 
+  [ServerEvents.GameChancellorPlayed]: {
+    nbCardsToDiscard: number;
+    cards: Cards[];
+  };
+
   [ServerEvents.GameState]: {
     lobbyId: string;
     players: string;
@@ -46,5 +52,6 @@ export type ServerPayloads = {
     playerTurn: string;
     playersTurnOrder: string[];
     deck: Cards[];
+    eventDescription: EventDescription | undefined;
   };
 };

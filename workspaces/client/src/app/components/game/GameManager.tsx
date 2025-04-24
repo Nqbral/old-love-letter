@@ -43,6 +43,7 @@ export default function GameManager() {
     playerTurn: '',
     playersTurnOrder: [],
     deck: [],
+    eventDescription: undefined,
   });
   const [lobbyError, setLobbyError] = useState<
     ServerPayloads[ServerEvents.LobbyError]

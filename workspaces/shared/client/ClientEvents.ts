@@ -21,6 +21,7 @@ export enum ClientEvents {
   GamePlayHandmaid = "client.game.play_handmaid",
   GamePlayPrince = "client.game.play_prince",
   GamePlayChancellor = "client.game.play_chancellor",
+  GamePlayChancellorPartTwo = "client.game.play_chancellor_part_two",
   GamePlayKing = "client.game.play_king",
   GamePlayCountess = "client.game.play_countess",
   GamePlayPrincess = "client.game.play_princess",

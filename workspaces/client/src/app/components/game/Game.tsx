@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { Hearts } from 'react-loader-spinner';
 import { Slide, ToastContainer } from 'react-toastify';
 
+import ModalChancellorPartTwo from './gamedisplay/showmodals/ModalChancellorPartTwo';
 import ModalPriestGuessed from './gamedisplay/showmodals/ModalPriestGuessed';
 
 type Props = {
@@ -43,6 +44,23 @@ export default function Game({ gameState, clientId }: Props) {
     });
   };
 
+  // Chancellor Part Two Modal Show
+  const [gameChancellorPlayed, setGameChancellorPlayed] = useState<
+    ServerPayloads[ServerEvents.GameChancellorPlayed]
+  >({ nbCardsToDiscard: 0, cards: [] });
+
+  const [openChancellorPartTwo, setOpenChancellorPartTwo] = useState(false);
+
+  const handleOpenChancellorPartTwo = () => setOpenChancellorPartTwo(true);
+
+  const handleCloseChancellorPartTwo = () => {
+    setOpenChancellorPartTwo(false);
+    setGameChancellorPlayed({
+      nbCardsToDiscard: 0,
+      cards: [],
+    });
+  };
+
   useEffect(() => {
     sm.connect();
 
@@ -53,10 +71,25 @@ export default function Game({ gameState, clientId }: Props) {
       handleOpenPriestGuessed();
     };
 
+    const onGameChancellorPlayed: Listener<
+      ServerPayloads[ServerEvents.GameChancellorPlayed]
+    > = (data) => {
+      setGameChancellorPlayed(data);
+      handleOpenChancellorPartTwo();
+    };
+
     sm.registerListener(ServerEvents.GamePriestPlayed, onGamePriestPlayed);
+    sm.registerListener(
+      ServerEvents.GameChancellorPlayed,
+      onGameChancellorPlayed,
+    );
 
     return () => {
       sm.removeListener(ServerEvents.GamePriestPlayed, onGamePriestPlayed);
+      sm.removeListener(
+        ServerEvents.GameChancellorPlayed,
+        onGameChancellorPlayed,
+      );
     };
   }, []);
 
@@ -122,6 +155,18 @@ export default function Game({ gameState, clientId }: Props) {
         <ModalPriestGuessed
           gamePriestPlayed={gamePriestPlayed}
           handleClose={handleClosePriestGuessed}
+        />
+      </Modal>
+      <Modal
+        open={openChancellorPartTwo}
+        onClose={() => {}}
+        aria-labelledby="modal-chancellor-part-two"
+        aria-describedby="modal-chancellor-part-two"
+      >
+        <ModalChancellorPartTwo
+          gameChancellorPlayed={gameChancellorPlayed}
+          gameState={gameState}
+          handleClose={handleCloseChancellorPartTwo}
         />
       </Modal>
       <ToastContainer transition={Slide} />
