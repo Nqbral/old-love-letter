@@ -19,9 +19,10 @@ import ModalPriestGuessed from './gamedisplay/showmodals/ModalPriestGuessed';
 type Props = {
   gameState: ServerPayloads[ServerEvents.GameState];
   clientId: string | undefined;
+  lobbyName: string;
 };
 
-export default function Game({ gameState, clientId }: Props) {
+export default function Game({ gameState, clientId, lobbyName }: Props) {
   const [playersTurnOrder, setPlayersTurnOrder] = useState(['']);
   const [playersParsed, setPlayersParsed] = useState(new Map());
   const { sm } = useSocketManager();
@@ -174,6 +175,7 @@ export default function Game({ gameState, clientId }: Props) {
         myPlayer={playersParsed.get(clientId)}
         gameState={gameState}
         playersParsed={playersParsed}
+        lobbyName={lobbyName}
       />
       <div className="flex w-full flex-row items-center">
         <Deck gameState={gameState} />

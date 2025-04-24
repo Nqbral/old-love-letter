@@ -155,7 +155,13 @@ export default function GameManager() {
       return <GameLobby lobbyState={lobbyState} />;
     }
 
-    return <Game gameState={gameState} clientId={clientId} />;
+    return (
+      <Game
+        gameState={gameState}
+        clientId={clientId}
+        lobbyName={lobbyState.lobbyName}
+      />
+    );
   }
 
   return (
