@@ -49,6 +49,7 @@ export type ServerPayloads = {
     players: string;
     discardedCard: Cards | undefined;
     lastPlayedCard: Cards | undefined;
+    secondPlayedCard: Cards | undefined;
     playerTurn: string;
     playersTurnOrder: string[];
     deck: Cards[];

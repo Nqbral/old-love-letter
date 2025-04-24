@@ -40,6 +40,7 @@ export default function GameManager() {
     players: '',
     discardedCard: undefined,
     lastPlayedCard: undefined,
+    secondPlayedCard: undefined,
     playerTurn: '',
     playersTurnOrder: [],
     deck: [],

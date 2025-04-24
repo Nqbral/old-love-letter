@@ -16,15 +16,22 @@ export default function Deck({ gameState }: Props) {
         <div>Pioche ({gameState.deck.length})</div>
         <Image src={BackCard} alt="deck" />
       </div>
-      <div className="flex w-24 flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4">
         <div>Défausse</div>
-        {gameState.lastPlayedCard != undefined ? (
-          <div>
-            <LastPlayedCard card={gameState.lastPlayedCard} />
-          </div>
-        ) : (
-          <div className="h-full w-24 rounded-sm border-1 border-dashed border-slate-700"></div>
-        )}
+        <div className="flex h-full flex-row items-center gap-2">
+          {gameState.lastPlayedCard != undefined ? (
+            <div>
+              <LastPlayedCard card={gameState.lastPlayedCard} />
+            </div>
+          ) : (
+            <div className="h-full w-24 rounded-sm border-1 border-dashed border-slate-700"></div>
+          )}
+          {gameState.secondPlayedCard == undefined ? (
+            <div className="h-full w-24 rounded-sm border-1 border-dashed border-slate-700"></div>
+          ) : (
+            <LastPlayedCard card={gameState.secondPlayedCard} />
+          )}
+        </div>
       </div>
     </div>
   );

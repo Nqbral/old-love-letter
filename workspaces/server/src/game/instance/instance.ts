@@ -699,6 +699,7 @@ export class Instance {
       players: JSON.stringify(this.players, replacer),
       discardedCard: this.discardedCard,
       lastPlayedCard: this.lastPlayedCard,
+      secondPlayedCard: this.secondPlayedCard,
       playerTurn: this.playerTurn,
       playersTurnOrder: this.playersTurnOrder,
       deck: this.deck,
