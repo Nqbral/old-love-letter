@@ -71,6 +71,16 @@ export class Lobby {
 
   public removeClient(client: AuthenticatedSocket): void {
     if (client.id !== this.owner.id) {
+      if (
+        [
+          GameState.GameStart,
+          GameState.GameRoundFinished,
+          GameState.GameFinished,
+        ].includes(this.instance.gameState)
+      ) {
+        this.deleteLobby(this.owner, false);
+        return;
+      }
       this.leaveLobby(client);
       return;
     }
