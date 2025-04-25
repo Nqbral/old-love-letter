@@ -17,12 +17,7 @@ export default function GameLobbyJoin({ lobbyState }: Props) {
   const router = useRouter();
 
   const [playerName, setPlayerName] = useState('');
-  const [validName, setValidName] = useState(false);
   const [errMsgName, setErrMsgName] = useState('');
-
-  useEffect(() => {
-    setValidName(REGEX_RULES.ALPHAONLY_REGEX.test(playerName));
-  }, [playerName]);
 
   const onLeaveLobby = () => {
     sm.emit({
@@ -38,10 +33,16 @@ export default function GameLobbyJoin({ lobbyState }: Props) {
   const onJoinLobby = () => {
     setErrMsgName('');
 
-    if (!validName) {
-      setErrMsgName('Veuillez saisir un pseudo valide');
+    if (!REGEX_RULES.ALPHAONLY_REGEX.test(playerName)) {
+      setErrMsgName('Veuillez saisir un pseudo valide (que des lettres).');
       return;
     }
+
+    if (playerName.length > 12) {
+      setErrMsgName('Le pseudo ne peut pas dépasser 12 caractères.');
+      return;
+    }
+
     sm.emit({
       event: ClientEvents.PlayerRename,
       data: {

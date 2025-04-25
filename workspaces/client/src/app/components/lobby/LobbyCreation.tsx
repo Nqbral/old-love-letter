@@ -15,24 +15,27 @@ export default function LobbyCreation({ setLobbyManagerState }: Props) {
   const { sm } = useSocketManager();
 
   const [lobbyName, setLobbyName] = useState('');
-  const [validName, setValidName] = useState(false);
   const [errMsgName, setErrMsgName] = useState('');
 
   const backToIntroduction = () => {
     setLobbyManagerState(LobbyManagerState.LobbyIntroduction);
   };
 
-  useEffect(() => {
-    setValidName(REGEX_RULES.ALPHAONLY_REGEX.test(lobbyName));
-  }, [lobbyName]);
-
   const onCreateLobby = () => {
     setErrMsgName('');
 
-    if (!validName) {
-      setErrMsgName('Veuillez saisir un pseudo valide');
+    if (!REGEX_RULES.ALPHAONLY_REGEX.test(lobbyName)) {
+      setErrMsgName(
+        'Veuillez saisir un nom de lobby valide (que des lettres).',
+      );
       return;
     }
+
+    if (lobbyName.length > 12) {
+      setErrMsgName('Le nom du lobby ne peut pas dépasser 12 caractères.');
+      return;
+    }
+
     sm.emit({
       event: ClientEvents.LobbyCreate,
       data: {
