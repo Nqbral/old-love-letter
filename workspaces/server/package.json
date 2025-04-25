@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "prebuild": "rimraf dist",
-    "start:dev": "nest start --watch"
+    "start:dev": "nest start --watch",
+    "start:prod": "rimraf dist && nest build && node dist/server/src/main"
   },
   "dependencies": {
     "@love-letter/shared": "*",

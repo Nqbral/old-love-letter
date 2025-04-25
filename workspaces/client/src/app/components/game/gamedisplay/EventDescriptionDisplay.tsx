@@ -46,7 +46,9 @@ export default function EventDescriptionDisplay({ eventDescription }: Props) {
       return <EventDescriptionPrincess eventDescription={eventDescription} />;
     default:
       return (
-        <div className="text-center">Aucun joueur n'a joué pour le moment.</div>
+        <div className="text-center">
+          Aucun joueur n&apos;a joué pour le moment.
+        </div>
       );
   }
 }

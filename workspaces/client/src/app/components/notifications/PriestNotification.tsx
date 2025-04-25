@@ -19,8 +19,9 @@ type Props = ToastContentProps<{
 }>;
 
 export default function PriestNotification({ data }: Props) {
-  let cardShow = articleCard(data.card)?.get('card');
-  let articleCardShow = articleCard(data.card)?.get('articleCard');
+  const cardShow = articleCard(data.card)?.get('card');
+  const articleCardShow = articleCard(data.card)?.get('articleCard');
+
   return (
     <div className={`${medievalsharp.className}`}>
       <div className="flex w-full flex-col items-center gap-4 text-center">

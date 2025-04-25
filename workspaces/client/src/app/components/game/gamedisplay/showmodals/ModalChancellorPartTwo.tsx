@@ -33,7 +33,7 @@ export default function ModalChancellorPartTwo({
   const [selectedCards, setSelectedCards] = useState<Cards[]>([]);
   const [selectionCards, setSelectionCards] = useState<SelectionCard[]>(
     gameChancellorPlayed.cards.map((card) => {
-      let newSelectCard: SelectionCard = {
+      const newSelectCard: SelectionCard = {
         card: card,
         selected: false,
         orderSelected: 0,
@@ -44,9 +44,9 @@ export default function ModalChancellorPartTwo({
   );
 
   const selectCard = (indexSelectedCard: number, selectedCard: Cards) => {
-    let arrSelectionCards = selectionCards;
-    let arrIndexSelectedCards = selectedIndexCards;
-    let arrSelectedCards = selectedCards;
+    const arrSelectionCards = selectionCards;
+    const arrIndexSelectedCards = selectedIndexCards;
+    const arrSelectedCards = selectedCards;
 
     if (selectionCards[indexSelectedCard].selected) {
       setNbSelected(nbSelected - 1);
@@ -62,9 +62,11 @@ export default function ModalChancellorPartTwo({
         gameChancellorPlayed.nbCardsToDiscard == 2 &&
         arrSelectionCards[indexSelectedCard].orderSelected == 1
       ) {
-        let findSecondChoise = arrSelectionCards.findIndex((selectionCard) => {
-          return selectionCard.selected;
-        });
+        const findSecondChoise = arrSelectionCards.findIndex(
+          (selectionCard) => {
+            return selectionCard.selected;
+          },
+        );
 
         if (findSecondChoise != -1) {
           arrSelectionCards[findSecondChoise].orderSelected = 1;

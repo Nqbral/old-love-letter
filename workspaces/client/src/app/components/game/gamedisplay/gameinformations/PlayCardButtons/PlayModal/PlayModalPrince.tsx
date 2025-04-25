@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 type Props = {
   handleClose: () => void;
   gameState: ServerPayloads[ServerEvents.GameState];
-  playersParsed: Map<any, any>;
+  playersParsed: Map<string, PlayerGame>;
   myPlayer: PlayerGame;
 };
 
@@ -28,7 +28,7 @@ export default function PlayModalPrince({
   const [listPlayers, setListPlayers] = useState<PlayerGame[]>([]);
 
   useEffect(() => {
-    let list = Array.from(playersParsed.values()).filter((player) => {
+    const list = Array.from(playersParsed.values()).filter((player) => {
       return player.alive && !player.activeCards.includes(Cards.Handmaid);
     });
 
@@ -67,10 +67,11 @@ export default function PlayModalPrince({
           {listPlayers.map((player, index) => {
             if (player.alive) {
               let classes = player.color + ' py-2 transition-colors';
+              const isPlayer = player.id == selectedPlayer;
 
-              player.id == selectedPlayer
-                ? (classes += ' bg-neutral-900 hover:bg-neutral-700')
-                : (classes += ' bg-neutral-800 hover:bg-neutral-700');
+              classes += isPlayer
+                ? ' bg-neutral-900 hover:bg-neutral-700'
+                : ' bg-neutral-800 hover:bg-neutral-700';
 
               if (index == 0) {
                 classes += ' rounded-t-lg';

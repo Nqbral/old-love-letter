@@ -3,7 +3,7 @@ import { Cards } from '@shared/common/Cards';
 export function articleCard(
   card: Cards | undefined,
 ): Map<string, string> | undefined {
-  let map: Map<string, string> = new Map();
+  const map: Map<string, string> = new Map();
 
   switch (card) {
     case Cards.Spy:

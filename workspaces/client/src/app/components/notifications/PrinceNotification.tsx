@@ -22,10 +22,10 @@ type Props = ToastContentProps<{
 }>;
 
 export default function PrinceNotification({ data }: Props) {
-  let lostCard = articleCard(data.lostCard)?.get('card');
-  let articleLostCard = articleCard(data.lostCard)?.get('articleCard');
+  const lostCard = articleCard(data.lostCard)?.get('card');
+  const articleLostCard = articleCard(data.lostCard)?.get('articleCard');
 
-  let drawedCard = articleCard(data.drawedCard)?.get('card');
+  const drawedCard = articleCard(data.drawedCard)?.get('card');
 
   return (
     <div className={`${medievalsharp.className}`}>

@@ -32,7 +32,8 @@ export default function PlayModalChancellor({ handleClose, gameState }: Props) {
           Jouer le chancelier
         </h2>
         <p className="text-primary-hover mt-8">
-          Il n'y a aucune carte dans le deck, l'action sera sans effet.
+          Il n&apos;y a aucune carte dans le deck, l&apos;action sera sans
+          effet.
         </p>
         <div className="flex flex-row gap-12">
           <PrimaryButton

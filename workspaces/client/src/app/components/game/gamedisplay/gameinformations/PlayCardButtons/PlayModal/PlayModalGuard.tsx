@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 type Props = {
   handleClose: () => void;
   gameState: ServerPayloads[ServerEvents.GameState];
-  playersParsed: Map<any, any>;
+  playersParsed: Map<string, PlayerGame>;
   myPlayer: PlayerGame;
 };
 
@@ -32,7 +32,7 @@ export default function PlayModalGuard({
   const [noPlayerAvailable, setNoPlayerAvailable] = useState(false);
 
   useEffect(() => {
-    let list = Array.from(playersParsed.values()).filter((player) => {
+    const list = Array.from(playersParsed.values()).filter((player) => {
       return (
         player.id != myPlayer.id &&
         player.alive &&
@@ -42,7 +42,7 @@ export default function PlayModalGuard({
 
     setNoPlayerAvailable(list.length == 0);
     setListPlayers(list);
-  }, [playersParsed]);
+  }, [playersParsed, myPlayer.id]);
 
   const playGuardNoEffect = () => {
     sm.emit({
@@ -98,8 +98,8 @@ export default function PlayModalGuard({
           <>
             <p className="text-primary-hover">
               Tous les joueurs encore en lice sont protégés par une{' '}
-              <span className="font-bold">Servante</span>. Jouer le garde n'aura
-              aucun effet.
+              <span className="font-bold">Servante</span>. Jouer le garde
+              n&apos;aura aucun effet.
             </p>
             <div>
               <div className="flex flex-row gap-12">
@@ -123,10 +123,11 @@ export default function PlayModalGuard({
               {listPlayers.map((player, index) => {
                 if (player.alive && player.id != myPlayer.id) {
                   let classes = player.color + ' py-2 transition-colors';
+                  const isPlayer = player.id == selectedPlayer;
 
-                  player.id == selectedPlayer
-                    ? (classes += ' bg-neutral-900 hover:bg-neutral-700')
-                    : (classes += ' bg-neutral-800 hover:bg-neutral-700');
+                  classes += isPlayer
+                    ? ' bg-neutral-900 hover:bg-neutral-700'
+                    : ' bg-neutral-800 hover:bg-neutral-700';
 
                   if (index == 0) {
                     classes += ' rounded-t-lg';

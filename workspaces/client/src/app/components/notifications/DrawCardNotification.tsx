@@ -1,7 +1,6 @@
 'use client';
 
 import { Cards } from '@shared/common/Cards';
-import { PlayerGame } from '@shared/common/Player';
 import { articleCard } from 'app/helper/ArticleCard';
 import { MedievalSharp } from 'next/font/google';
 import { ToastContentProps } from 'react-toastify';
@@ -18,7 +17,7 @@ type Props = ToastContentProps<{
 }>;
 
 export default function DrawCardNotification({ data }: Props) {
-  let card = articleCard(data.card)?.get('card');
+  const card = articleCard(data.card)?.get('card');
 
   return (
     <div className={`${medievalsharp.className} w-full`}>

@@ -78,7 +78,10 @@ export default function ModalRecapRound({ gameState }: Props) {
                   (player, index) => {
                     if (index == 0) {
                       return (
-                        <span className={player.color}>
+                        <span
+                          key={'player-win-by-value-' + player.id}
+                          className={player.color}
+                        >
                           {player.playerName}
                         </span>
                       );
@@ -93,7 +96,10 @@ export default function ModalRecapRound({ gameState }: Props) {
                       return (
                         <>
                           {', '}
-                          <span className={player.color}>
+                          <span
+                            key={'player-win-by-value-' + player.id}
+                            className={player.color}
+                          >
                             {player.playerName}
                           </span>
                           .
@@ -104,7 +110,10 @@ export default function ModalRecapRound({ gameState }: Props) {
                     return (
                       <>
                         {', '}
-                        <span className={player.color}>
+                        <span
+                          key={'player-win-by-value-' + player.id}
+                          className={player.color}
+                        >
                           {player.playerName}
                         </span>
                       </>
@@ -197,7 +206,10 @@ export default function ModalRecapRound({ gameState }: Props) {
                   (player, index) => {
                     if (index == 0) {
                       return (
-                        <span className={player.color}>
+                        <span
+                          key={'player-win-' + player.id}
+                          className={player.color}
+                        >
                           {player.playerName}
                         </span>
                       );
@@ -212,7 +224,10 @@ export default function ModalRecapRound({ gameState }: Props) {
                       return (
                         <>
                           {', '}
-                          <span className={player.color}>
+                          <span
+                            key={'player-win-' + player.id}
+                            className={player.color}
+                          >
                             {player.playerName}
                           </span>
                           .
@@ -223,7 +238,10 @@ export default function ModalRecapRound({ gameState }: Props) {
                     return (
                       <>
                         {', '}
-                        <span className={player.color}>
+                        <span
+                          key={'player-win-' + player.id}
+                          className={player.color}
+                        >
                           {player.playerName}
                         </span>
                       </>
@@ -249,7 +267,7 @@ export default function ModalRecapRound({ gameState }: Props) {
         )}
         {!isOwner && (
           <p className="text-primary-hover">
-            En attente de l'hôte du lobby pour la prochaine manche/partie.
+            En attente de l&apos;hôte du lobby pour la prochaine manche/partie.
           </p>
         )}
       </div>

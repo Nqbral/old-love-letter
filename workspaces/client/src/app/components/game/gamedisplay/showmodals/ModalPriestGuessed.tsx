@@ -1,6 +1,5 @@
 import SecondaryButton from '@components/buttons/SecondaryButton';
 import ModalTemplate from '@components/modal/ModalTemplate';
-import { Cards } from '@shared/common/Cards';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
 

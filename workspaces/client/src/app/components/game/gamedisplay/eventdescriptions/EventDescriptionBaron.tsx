@@ -1,4 +1,3 @@
-import { Cards } from '@shared/common/Cards';
 import { EventDescription, ResultEvent } from '@shared/common/EventDescription';
 import { articleCard } from 'app/helper/ArticleCard';
 
@@ -7,8 +6,8 @@ type Props = {
 };
 
 export default function EventDescriptionBaron({ eventDescription }: Props) {
-  let cardKilled = articleCard(eventDescription?.killedCard)?.get('card');
-  let articleCardKilled = articleCard(eventDescription?.killedCard)?.get(
+  const cardKilled = articleCard(eventDescription?.killedCard)?.get('card');
+  const articleCardKilled = articleCard(eventDescription?.killedCard)?.get(
     'articleCard',
   );
 

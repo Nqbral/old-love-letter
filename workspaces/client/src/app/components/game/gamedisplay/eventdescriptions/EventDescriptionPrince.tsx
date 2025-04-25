@@ -6,8 +6,8 @@ type Props = {
 };
 
 export default function EventDescriptionPrince({ eventDescription }: Props) {
-  let discardedCard = articleCard(eventDescription?.discardedCard)?.get('card');
-  let articleDiscardedCard = articleCard(eventDescription?.discardedCard)?.get(
+  const discardedCard = articleCard(eventDescription?.discardedCard)?.get('card');
+  const articleDiscardedCard = articleCard(eventDescription?.discardedCard)?.get(
     'articleCard',
   );
 

@@ -25,9 +25,9 @@ export default function Rules() {
           <h2 className="text-xl underline underline-offset-4">Présentation</h2>
           <p className="text-center">
             Dans <span className="font-bold">Love Letter</span> 2 à 6 soupirants
-            s'affrontent pour que leurs lettres soient remises à la Princesse du
-            royaume, qui cherche le partenaire et le confident idéal, en
-            prévision du jour où elle montera sur le trône.
+            s&apos;affrontent pour que leurs lettres soient remises à la
+            Princesse du royaume, qui cherche le partenaire et le confident
+            idéal, en prévision du jour où elle montera sur le trône.
           </p>
         </div>
         <div className="flex flex-col items-center gap-3">
@@ -35,9 +35,10 @@ export default function Rules() {
             Mise en place du jeu
           </h2>
           <p className="text-center">
-            Lors d'une partie de <span className="font-bold">Love Letter</span>,
-            les 21 cartes personnages sont mélangées au début de chaque manche
-            et la première carte du paquet est mise de côté face cachée.
+            Lors d&apos;une partie de{' '}
+            <span className="font-bold">Love Letter</span>, les 21 cartes
+            personnages sont mélangées au début de chaque manche et la première
+            carte du paquet est mise de côté face cachée.
           </p>
         </div>
         <div className="flex flex-col items-center gap-3">
@@ -47,8 +48,8 @@ export default function Rules() {
           <p className="text-center">
             <span className="font-bold">Love Letter</span> se déroule selon
             plusieurs manches durant lesquelles vous faites appel aux alliés,
-            amis et à la famille de la princesse afin qu'ils lui remettent une
-            lettre d'amour.
+            amis et à la famille de la princesse afin qu&apos;ils lui remettent
+            une lettre d&apos;amour.
             <br />
             La carte que vous avez en main représente la personne qui transporte
             actuellement votre missive, mais elle est susceptible de changer à
@@ -65,7 +66,7 @@ export default function Rules() {
           </h2>
           <p className="text-center">
             Effectuez vos tours de jeu en sens horaire. À votre tour, piochez 1
-            carte du paquet. Choisissez et jouez ensuite l'une de vos deux
+            carte du paquet. Choisissez et jouez ensuite l&apos;une de vos deux
             cartes en résolvant son effet.
           </p>
         </div>
@@ -75,16 +76,16 @@ export default function Rules() {
           </h2>
           <p className="text-center">
             Certains effets de cartes vous forcent à quitter la manche en cours
-            ; un soupirant adverse s'est assuré que votre lettre n'arrive jamais
-            à destination.
+            ; un soupirant adverse s&apos;est assuré que votre lettre
+            n&apos;arrive jamais à destination.
             <br />
             Lorsque cela se produit,{' '}
             <span className="font-bold">
               défaussez votre main face visible devant vous
             </span>{' '}
-            (sans résoudre l'effet de la carte qu'elle contenait).
+            (sans résoudre l&apos;effet de la carte qu&apos;elle contenait).
             <br />
-            Jusqu'au début de la prochaine manche,{' '}
+            Jusqu&apos;au début de la prochaine manche,{' '}
             <span className="font-bold">
               {' '}
               vous ne pouvez plus être ciblé par des effets de cartes et vous
@@ -102,7 +103,9 @@ export default function Rules() {
             <span className="font-bold">face visible</span> sont :
           </p>
           <ul className="list-inside list-disc text-center">
-            <li>la dernière carte défaussée ou jouée par l'un des joueurs</li>
+            <li>
+              la dernière carte défaussée ou jouée par l&apos;un des joueurs
+            </li>
             <li>
               les cartes dont les effets sont en cours (Espionne ou Servante)
             </li>
@@ -113,9 +116,9 @@ export default function Rules() {
             Fin de la manche
           </h2>
           <p className="text-center">
-            La manche peut s'achever de deux manières : soit quand{' '}
+            La manche peut s&apos;achever de deux manières : soit quand{' '}
             <span className="font-bold">le paquet est épuisé</span>, soit quand
-            lorsqu'il ne reste plus qu'
+            lorsqu&apos;il ne reste plus qu&apos;
             <span className="font-bold">un seul joueur en lice</span>.
             <br />
             <br />
@@ -127,13 +130,13 @@ export default function Rules() {
             remportez la manche et gagnez 1 pion Faveur ; votre lettre est bien
             parvenue à la Princesse.
             <br />
-            En cas d'égalité, tous les joueurs concernés remportent la manche et
-            chacun d'eux gagne 1 pion faveur.
+            En cas d&apos;égalité, tous les joueurs concernés remportent la
+            manche et chacun d&apos;eux gagne 1 pion faveur.
             <br />
             <br />
             Si vous êtes le seul joueur à participer encore à la manche en cours
             (car tous les autres ont dû la quitter suite à des effets de
-            cartes), celle-ci s'achève immédiatement ; vous la remporter et
+            cartes), celle-ci s&apos;achève immédiatement ; vous la remporter et
             gagnez 1 pion faveur.
           </p>
         </div>
@@ -149,9 +152,9 @@ export default function Rules() {
             <span className="font-bold">
               Le joueur qui a remporté la manche précédente
             </span>{' '}
-            effectue alors son tour en premier. Si la manche précédente s'est
-            soldée par une égalité, un joueur au hasard sera le premier joueur
-            parmi les concernés.
+            effectue alors son tour en premier. Si la manche précédente
+            s&apos;est soldée par une égalité, un joueur au hasard sera le
+            premier joueur parmi les concernés.
           </p>
         </div>
         <div className="flex flex-col items-center gap-3">
@@ -159,10 +162,10 @@ export default function Rules() {
             Remporter la partie
           </h2>
           <p className="text-center">
-            La partie s'achève lorsqu'un joueur détient suffisamment de pions
-            Faveur pour gagner (ce qui dépend du nombre de joueurs, voir tableau
-            ci-dessous). Il est possible que plusieurs joueurs remportent
-            simultanément la partie.
+            La partie s&apos;achève lorsqu&apos;un joueur détient suffisamment
+            de pions Faveur pour gagner (ce qui dépend du nombre de joueurs,
+            voir tableau ci-dessous). Il est possible que plusieurs joueurs
+            remportent simultanément la partie.
           </p>
           <table>
             <tbody>
@@ -254,12 +257,12 @@ export default function Rules() {
               altimg="countess_img"
               description={
                 <p className="text-center">
-                  La Comtesse n'a pas d'effect actif lorsqu'elle est jouée ou
-                  défaussée.
+                  La Comtesse n&apos;a pas d&apos;effect actif lorsqu&apos;elle
+                  est jouée ou défaussée.
                   <br />
                   <br />
                   Vous <span className="font-bold">devez</span> la jouer pendant
-                  votre tour si l'autre carte de votre main est le{' '}
+                  votre tour si l&apos;autre carte de votre main est le{' '}
                   <span className="font-bold">Roi</span> ou un{' '}
                   <span className="font-bold">Prince</span>.
                   <br />
@@ -268,8 +271,8 @@ export default function Rules() {
                   même si vous ne détenez ni le Roi, ni un Prince.
                   <br />
                   <br />
-                  Son effet ne s'applique pas lorsque vous piochez des cartes
-                  suite à d'autres effets (Chancelier).
+                  Son effet ne s&apos;applique pas lorsque vous piochez des
+                  cartes suite à d&apos;autres effets (Chancelier).
                 </p>
               }
               value={8}
@@ -300,12 +303,13 @@ export default function Rules() {
                   Choisissez et conservez <span className="font-bold">une</span>{' '}
                   des trois cartes de votre main, puis placez les{' '}
                   <span className="font-bold">deux</span> autres face cachée
-                  au-dessous du paquet (dans l'ordre de votre choix).
+                  au-dessous du paquet (dans l&apos;ordre de votre choix).
                   <br />
                   <br />
-                  S'il ne reste qu'une seule carte dans le paquet, piochez-la et
-                  remettez-en une à sa place. Si le paquet est épuisé, le
-                  Chancelier n'a pas d'effet lorsqu'il est joué.
+                  S&apos;il ne reste qu&apos;une seule carte dans le paquet,
+                  piochez-la et remettez-en une à sa place. Si le paquet est
+                  épuisé, le Chancelier n&apos;a pas d&apos;effet lorsqu&apos;il
+                  est joué.
                 </p>
               }
               value={6}
@@ -319,19 +323,19 @@ export default function Rules() {
               description={
                 <p className="text-center">
                   Choisissez{' '}
-                  <span className="font-bold">n'importe quel joueur</span>, y
-                  compris vous-même. Le joueur choisi défausse sa main face
-                  visible (sans résoudre l'effet de la carte qu'elle contenait)
-                  et en pioche une nouvelle.
+                  <span className="font-bold">n&apos;importe quel joueur</span>
+                  , y compris vous-même. Le joueur choisi défausse sa main face
+                  visible (sans résoudre l&apos;effet de la carte qu&apos;elle
+                  contenait) et en pioche une nouvelle.
                   <br />
                   <br />
                   Si le paquet est épuisé, le joueur choisi pioche la carte face
                   cachée mise de côté en début de la partie
                   <br />
                   <br />
-                  Si un joueur vous cible en résolvant l'effet du Prince et que
-                  vous êtes contrait de défausser la Princesse, vous quittez la
-                  manche immédiatement sans piocher de nouvelle main.
+                  Si un joueur vous cible en résolvant l&apos;effet du Prince et
+                  que vous êtes contrait de défausser la Princesse, vous quittez
+                  la manche immédiatement sans piocher de nouvelle main.
                 </p>
               }
               value={5}
@@ -345,9 +349,9 @@ export default function Rules() {
               description={
                 <div>
                   <p className="text-center">
-                    Jusqu'au début de{' '}
+                    Jusqu&apos;au début de{' '}
                     <span className="font-bold">votre prochain tour</span>, les
-                    autres joueurs ne peuvent pas vous cibler lorsqu'ils
+                    autres joueurs ne peuvent pas vous cibler lorsqu&apos;ils
                     résolvent leurs effets de cartes.
                     <br />
                     <br />
@@ -355,19 +359,22 @@ export default function Rules() {
                     <span className="font-bold">
                       tous les autres joueurs
                     </span>{' '}
-                    encore en lice seraient "protégés" par une Servante au
-                    moment où vous jouez une carte, suivez ces consignes :
+                    encore en lice seraient &quot;protégés&quot; par une
+                    Servante au moment où vous jouez une carte, suivez ces
+                    consignes :
                   </p>
                   <br />
                   <ul className="list-inside list-disc text-center">
                     <li>
                       Si cette carte nécessite que vous choisissez{' '}
                       <span className="font-bold">un autre joueur</span> (Garde,
-                      Prêtre, Baron ou Roi), elle n'a pas d'effet.
+                      Prêtre, Baron ou Roi), elle n&apos;a pas d&apos;effet.
                     </li>
                     <li>
                       Si cette carte nécessite que vous choisissez{' '}
-                      <span className="font-bold">n'importe quel joueur</span>{' '}
+                      <span className="font-bold">
+                        n&apos;importe quel joueur
+                      </span>{' '}
                       (Prince), vous êtes contraint de vous cibler vous-même
                       pour résoudre son effet.
                     </li>
@@ -385,11 +392,11 @@ export default function Rules() {
               description={
                 <p className="text-center">
                   Choisissez un autre joueur et comparer discrètement vos deux
-                  mains. Celui d'entre vous qui détient la carte dont la valeur
-                  est la plus faible quitte immédiatement la manche.
+                  mains. Celui d&apos;entre vous qui détient la carte dont la
+                  valeur est la plus faible quitte immédiatement la manche.
                   <br />
                   <br />
-                  En cas d'égalité, aucun de vous deux ne quitte la manche.
+                  En cas d&apos;égalité, aucun de vous deux ne quitte la manche.
                 </p>
               }
               value={3}
@@ -403,7 +410,7 @@ export default function Rules() {
               description={
                 <p className="text-center">
                   Choisissez un autre joueur et regardez discrètement sa main
-                  (personne d'autre que vous ne le voit).
+                  (personne d&apos;autre que vous ne le voit).
                 </p>
               }
               value={2}
@@ -431,8 +438,8 @@ export default function Rules() {
               altimg="spy_img"
               description={
                 <p className="text-center">
-                  Une Espionne n'a pas d'effet actif lorsqu'elle est jouée ou
-                  défaussée.
+                  Une Espionne n&apos;a pas d&apos;effet actif lorsqu&apos;elle
+                  est jouée ou défaussée.
                   <br />
                   <br />À la fin de manche, si vous êtes{' '}
                   <span className="font-bold">
@@ -443,11 +450,11 @@ export default function Rules() {
                   <br />
                   <br />
                   Cela ne revient pas à remporter la manche ; le vainqueur (même
-                  si c'est vous) gagne quand même son pion faveur.
+                  si c&apos;est vous) gagne quand même son pion faveur.
                   <br />
                   <br />
-                  Vous ne gagnez toujours qu'un seul pion, même si vous jouez
-                  et/ou défaussez les deux Espionnes.
+                  Vous ne gagnez toujours qu&apos;un seul pion, même si vous
+                  jouez et/ou défaussez les deux Espionnes.
                 </p>
               }
               value={0}

@@ -12,7 +12,7 @@ type Props = {
   disabled: boolean;
   showNotYourTurn: () => void;
   gameState: ServerPayloads[ServerEvents.GameState];
-  playersParsed: Map<any, any>;
+  playersParsed: Map<string, PlayerGame>;
   myPlayer: PlayerGame;
 };
 

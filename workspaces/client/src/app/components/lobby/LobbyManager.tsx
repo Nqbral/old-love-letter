@@ -39,7 +39,7 @@ export default function LobbyManager() {
     return () => {
       sm.removeListener(ServerEvents.LobbyState, onLobbyState);
     };
-  }, []);
+  }, [sm, router]);
 
   return (
     <div className="flex w-full flex-col items-center py-12">

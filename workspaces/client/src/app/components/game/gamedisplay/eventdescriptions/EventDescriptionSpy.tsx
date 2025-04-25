@@ -11,7 +11,7 @@ export default function EventDescriptionSpy({ eventDescription }: Props) {
       <span className={eventDescription?.player.color}>
         {eventDescription?.player.playerName}
       </span>{' '}
-      a joué l'<span className="font-bold">Espionne</span>.
+      a joué l&apos;<span className="font-bold">Espionne</span>.
     </div>
   );
 }

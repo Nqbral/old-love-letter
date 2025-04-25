@@ -334,7 +334,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         onGameMessageKingTarget,
       );
     };
-  }, []);
+  }, [sm, clientId, playersTurnOrder]);
 
   useEffect(() => {
     if (
@@ -402,7 +402,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         setResetOrder(false);
       }
     }
-  }, [gameState]);
+  }, [gameState, clientId, playersTurnOrder]);
 
   if (playersParsed.size == 0) {
     return (

@@ -44,7 +44,7 @@ export default function ModalHelpCards({ handleClose }: Props) {
               <div className="py-2">x1</div>
             </div>
             <div className="flex h-full w-full items-center justify-center border-l-1 border-slate-700 px-2">
-              Échangez votre main contre celle d'un autre joueur
+              Échangez votre main contre celle d&apos;un autre joueur
             </div>
           </div>
           <div className="flex w-full flex-row items-center border-1 border-slate-700">
@@ -68,7 +68,7 @@ export default function ModalHelpCards({ handleClose }: Props) {
               <div className="py-2">x2</div>
             </div>
             <div className="flex h-full w-full items-center justify-center border-l-1 border-slate-700 px-2">
-              Défaussez la main d'un joueur (vous-compris) qui repioche
+              Défaussez la main d&apos;un joueur (vous-compris) qui repioche
             </div>
           </div>
           <div className="flex w-full flex-row items-center border-1 border-slate-700">
@@ -79,8 +79,8 @@ export default function ModalHelpCards({ handleClose }: Props) {
               <div className="py-2">x2</div>
             </div>
             <div className="flex h-full w-full items-center justify-center border-l-1 border-slate-700 px-2">
-              Vous êtes immunisé contre les autres cartes jusqu'à votre prochain
-              tour
+              Vous êtes immunisé contre les autres cartes jusqu&apos;à votre
+              prochain tour
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@ export default function ModalHelpCards({ handleClose }: Props) {
               <div className="py-2">x2</div>
             </div>
             <div className="flex h-full w-full items-center justify-center border-l-1 border-slate-700 px-2">
-              Comparez votre main avec celle d'un autre joueur
+              Comparez votre main avec celle d&apos;un autre joueur
             </div>
           </div>
           <div className="flex w-full flex-row items-center border-1 border-slate-700">
@@ -104,7 +104,7 @@ export default function ModalHelpCards({ handleClose }: Props) {
               <div className="py-2">x2</div>
             </div>
             <div className="flex h-full w-full items-center justify-center border-l-1 border-slate-700 px-2">
-              Regarder la main d'un autre joueur
+              Regarder la main d&apos;un autre joueur
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@ export default function ModalHelpCards({ handleClose }: Props) {
               <div className="py-2">x6</div>
             </div>
             <div className="flex h-full w-full items-center justify-center border-l-1 border-slate-700 px-2">
-              Devinez la main d'un autre joueur (sauf garde)
+              Devinez la main d&apos;un autre joueur (sauf garde)
             </div>
           </div>
           <div className="flex w-full flex-row items-center border-1 border-slate-700">
@@ -128,7 +128,7 @@ export default function ModalHelpCards({ handleClose }: Props) {
               <div className="py-2">x2</div>
             </div>
             <div className="flex h-full w-full items-center justify-center border-l-1 border-slate-700 px-2">
-              Gagnez 1 pion Faveur si personne d'autre ne joue/défausse une
+              Gagnez 1 pion Faveur si personne d&apos;autre ne joue/défausse une
               Espionne
             </div>
           </div>

@@ -20,8 +20,8 @@ type Props = ToastContentProps<{
 }>;
 
 export default function GuardNotification({ data }: Props) {
-  let cardGuessed = articleCard(data.card)?.get('card');
-  let articleCardGuessed = articleCard(data.card)?.get('articleCard');
+  const cardGuessed = articleCard(data.card)?.get('card');
+  const articleCardGuessed = articleCard(data.card)?.get('articleCard');
 
   return (
     <div className={`${medievalsharp.className}`}>
@@ -35,11 +35,11 @@ export default function GuardNotification({ data }: Props) {
           <br />
           {data.killed ? (
             <div className="text-center text-white">
-              C'est le cas, vous êtes éliminé.
+              C&apos;est le cas, vous êtes éliminé.
             </div>
           ) : (
             <div className="text-center text-white">
-              Ce n'est pas le cas, rien ne se passe.
+              Ce n&apos;est pas le cas, rien ne se passe.
             </div>
           )}
         </div>

@@ -1,4 +1,3 @@
-import { Cards } from '@shared/common/Cards';
 import { EventDescription, ResultEvent } from '@shared/common/EventDescription';
 import { articleCard } from 'app/helper/ArticleCard';
 
@@ -7,8 +6,8 @@ type Props = {
 };
 
 export default function EventDescriptionGuard({ eventDescription }: Props) {
-  let cardTarget = articleCard(eventDescription?.cardTarget)?.get('card');
-  let articleCardTarget = articleCard(eventDescription?.cardTarget)?.get(
+  const cardTarget = articleCard(eventDescription?.cardTarget)?.get('card');
+  const articleCardTarget = articleCard(eventDescription?.cardTarget)?.get(
     'articleCard',
   );
 
@@ -37,15 +36,15 @@ export default function EventDescriptionGuard({ eventDescription }: Props) {
       <span className="font-bold">{cardTarget}</span> dans sa main.
       <br />
       {eventDescription?.resultEvent == ResultEvent.GuardNotGuessed && (
-        <div>Ce n'est pas le cas, rien ne se passe.</div>
+        <div>Ce n&apos;est pas le cas, rien ne se passe.</div>
       )}
       {eventDescription?.resultEvent == ResultEvent.KillPlayer && (
         <div>
-          C'est le cas, le joueur{' '}
+          C&apos;est le cas, le joueur{' '}
           <span className={eventDescription?.playerTargeted?.color}>
             {eventDescription?.playerTargeted?.playerName}
           </span>{' '}
-          n'est plus en lice.
+          n&apos;est plus en lice.
         </div>
       )}
     </div>

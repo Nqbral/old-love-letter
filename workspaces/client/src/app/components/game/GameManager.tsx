@@ -55,7 +55,6 @@ export default function GameManager() {
     ServerPayloads[ServerEvents.LobbyDelete]
   >({ message: '' });
   const [showJoinLobby, setShowJoinLobby] = useState<boolean>(false);
-
   const searchParams = useSearchParams();
 
   const isPlayerNamed = () => {
@@ -87,7 +86,7 @@ export default function GameManager() {
         },
       });
     }
-  }, [router]);
+  }, [router, sm, searchParams]);
 
   useEffect(() => {
     sm.connect();
@@ -135,7 +134,7 @@ export default function GameManager() {
       sm.removeListener(ServerEvents.GameState, onGameState);
       sm.removeListener(ServerEvents.GameMessage, onGameMessage);
     };
-  }, []);
+  }, [sm]);
 
   useEffect(() => {
     isPlayerNamed();

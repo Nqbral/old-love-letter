@@ -6,7 +6,7 @@ import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';
 import { REGEX_RULES } from 'app/constants';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 type Props = {
   lobbyState: ServerPayloads[ServerEvents.LobbyState] | null;

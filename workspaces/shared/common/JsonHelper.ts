@@ -1,4 +1,4 @@
-export function replacer(key, value) {
+export function replacer(key: string, value: any) {
   if (value instanceof Map) {
     return {
       dataType: "Map",
@@ -9,7 +9,7 @@ export function replacer(key, value) {
   }
 }
 
-export function reviver(key, value) {
+export function reviver(key: string, value: any) {
   if (typeof value === "object" && value !== null) {
     if (value.dataType === "Map") {
       return new Map(value.value);

@@ -66,7 +66,9 @@ export default function GameLobby({ lobbyState }: Props) {
 
   return (
     <div className="flex flex-col items-center justify-center gap-6">
-      <h1 className="text-primary text-4xl">Lobby "{lobbyState?.lobbyName}"</h1>
+      <h1 className="text-primary text-4xl">
+        Lobby &quot;{lobbyState?.lobbyName}&quot;
+      </h1>
       <p className="italic">Nombre de joueurs minimum requis : 2</p>
       <p className="italic">Nombre de joueurs maximum : 6</p>
       <div className="flex w-100 flex-col items-center justify-center gap-2 border-1 border-slate-700 py-4">

@@ -1,4 +1,3 @@
-import { Cards } from '@shared/common/Cards';
 import { EventDescription, ResultEvent } from '@shared/common/EventDescription';
 
 type Props = {

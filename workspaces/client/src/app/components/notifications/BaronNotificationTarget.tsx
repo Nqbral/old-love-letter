@@ -22,10 +22,10 @@ type Props = ToastContentProps<{
 }>;
 
 export default function BaronNotificationTarget({ data }: Props) {
-  let cardPlayer = articleCard(data.cardPlayer)?.get('card');
-  let articleCardPlayer = articleCard(data.cardPlayer)?.get('articleCard');
-  let cardPlayerTargeted = articleCard(data.cardPlayerTargeted)?.get('card');
-  let articleCardPlayerTargeted = articleCard(data.cardPlayerTargeted)?.get(
+  const cardPlayer = articleCard(data.cardPlayer)?.get('card');
+  const articleCardPlayer = articleCard(data.cardPlayer)?.get('articleCard');
+  const cardPlayerTargeted = articleCard(data.cardPlayerTargeted)?.get('card');
+  const articleCardPlayerTargeted = articleCard(data.cardPlayerTargeted)?.get(
     'articleCard',
   );
 

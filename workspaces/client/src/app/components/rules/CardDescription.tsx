@@ -33,7 +33,7 @@ export default function CardDescription({
         <p>{value}</p>
       </div>
       <div className="flex w-96 flex-col items-center border-r-2 border-b-2 border-l-2 border-slate-700 py-4 sm:w-xl">
-        <h4 className="mb-2 underline">Nombre d'exemplaire(s)</h4>
+        <h4 className="mb-2 underline">Nombre d&apos;exemplaire(s)</h4>
         <p>{nbCard}</p>
       </div>
     </div>

@@ -20,8 +20,8 @@ type Props = ToastContentProps<{
 }>;
 
 export default function KingNotificationTarget({ data }: Props) {
-  let cardPlayer = articleCard(data.cardPlayer)?.get('card');
-  let cardPlayerTargeted = articleCard(data.cardPlayerTargeted)?.get('card');
+  const cardPlayer = articleCard(data.cardPlayer)?.get('card');
+  const cardPlayerTargeted = articleCard(data.cardPlayerTargeted)?.get('card');
 
   return (
     <div className={`${medievalsharp.className}`}>
