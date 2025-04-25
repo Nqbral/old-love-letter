@@ -343,6 +343,10 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
       handleOpenRecapRound();
     }
 
+    if (gameState.gameState == GameState.GameStart) {
+      handleCloseRecapRound();
+    }
+
     if (gameState.players == '') {
       return;
     }
@@ -425,10 +429,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         aria-labelledby="modal-recap-round"
         aria-describedby="modal-recap-round-show"
       >
-        <ModalRecapRound
-          gameState={gameState}
-          handleClose={handleCloseRecapRound}
-        />
+        <ModalRecapRound gameState={gameState} />
       </Modal>
       <ToastContainer transition={Slide} />
       <GameInformations

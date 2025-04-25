@@ -25,4 +25,6 @@ export enum ClientEvents {
   GamePlayKing = "client.game.play_king",
   GamePlayCountess = "client.game.play_countess",
   GamePlayPrincess = "client.game.play_princess",
+  GameLaunchNextRound = "client.game.launch.next.round",
+  GameRelaunchGame = "client.game.relaunch.game",
 }

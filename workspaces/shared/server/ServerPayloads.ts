@@ -109,5 +109,6 @@ export type ServerPayloads = {
     eventDescription: EventDescription | undefined;
     roundRecap: RoundRecap | undefined;
     gameState: GameState;
+    ownerId: string;
   };
 };

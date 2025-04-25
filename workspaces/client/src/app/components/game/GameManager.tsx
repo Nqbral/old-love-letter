@@ -46,6 +46,7 @@ export default function GameManager() {
     eventDescription: undefined,
     roundRecap: undefined,
     gameState: GameState.InLobby,
+    ownerId: '',
   });
   const [lobbyError, setLobbyError] = useState<
     ServerPayloads[ServerEvents.LobbyError]

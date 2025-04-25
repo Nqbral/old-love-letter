@@ -1,6 +1,10 @@
+import PrimaryButton from '@components/buttons/PrimaryButton';
+import useSocketManager from '@components/hooks/useSocketManager';
 import ModalTemplate from '@components/modal/ModalTemplate';
 import { faCoins, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ClientEvents } from '@shared/client/ClientEvents';
+import { GameState } from '@shared/common/GameState';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
 
@@ -9,12 +13,21 @@ import LastPlayedCard from '../deck/LastPlayedCard';
 
 type Props = {
   gameState: ServerPayloads[ServerEvents.GameState];
-  handleClose: () => void;
 };
 
-export default function ModalRecapRound({ gameState, handleClose }: Props) {
-  console.log('test');
-  console.log(gameState.roundRecap?.playerWhoWinBySpy);
+export default function ModalRecapRound({ gameState }: Props) {
+  const { sm } = useSocketManager();
+  const isOwner = sm.getSocketId() === gameState?.ownerId;
+
+  const launchNextRound = () => {
+    sm.emit({
+      event: ClientEvents.GameLaunchNextRound,
+      data: {
+        lobbyId: gameState.lobbyId,
+      },
+    });
+  };
+
   return (
     <ModalTemplate>
       <div className="flex w-2xl flex-col items-center gap-6 text-center">
@@ -150,6 +163,86 @@ export default function ModalRecapRound({ gameState, handleClose }: Props) {
             eventDescription={gameState.roundRecap?.eventDescription}
           />
         </div>
+        {gameState.gameState == GameState.GameFinished &&
+          gameState.roundRecap?.playersWhoWinMatch.length == 1 && (
+            <div className="flex flex-col gap-2">
+              <h3 className="font-bold underline">Gagnant de la partie</h3>
+              <div>
+                Le gagnant de la partie est :{' '}
+                <span
+                  className={gameState.roundRecap.playersWhoWinMatch[0].color}
+                >
+                  {gameState.roundRecap.playersWhoWinMatch[0].playerName}
+                </span>
+              </div>
+            </div>
+          )}
+        {gameState.gameState == GameState.GameFinished &&
+          gameState.roundRecap?.playersWhoWinMatch.length != undefined &&
+          gameState.roundRecap?.playersWhoWinMatch.length >= 2 && (
+            <div className="flex flex-col gap-2">
+              <h3 className="font-bold underline">Gagnants de la partie</h3>
+              <div>
+                Les gagnants de la partie sont :{' '}
+                {gameState.roundRecap?.playersWhoWinMatch.map(
+                  (player, index) => {
+                    if (index == 0) {
+                      return (
+                        <span className={player.color}>
+                          {player.playerName}
+                        </span>
+                      );
+                    }
+
+                    if (
+                      gameState.roundRecap?.playersWhoWinByValue.length !=
+                        undefined &&
+                      index ==
+                        gameState.roundRecap?.playersWhoWinByValue.length - 1
+                    ) {
+                      return (
+                        <>
+                          {', '}
+                          <span className={player.color}>
+                            {player.playerName}
+                          </span>
+                          .
+                        </>
+                      );
+                    }
+
+                    return (
+                      <>
+                        {', '}
+                        <span className={player.color}>
+                          {player.playerName}
+                        </span>
+                      </>
+                    );
+                  },
+                )}
+              </div>
+            </div>
+          )}
+        {isOwner && gameState.gameState == GameState.GameRoundFinished && (
+          <PrimaryButton
+            buttonText="Lancer la prochaine manche"
+            onClick={launchNextRound}
+            disabled={false}
+          />
+        )}
+        {isOwner && gameState.gameState == GameState.GameFinished && (
+          <PrimaryButton
+            buttonText="Relancer une nouvelle partie"
+            onClick={() => {}}
+            disabled={false}
+          />
+        )}
+        {!isOwner && (
+          <p className="text-primary-hover">
+            En attente de l'hôte du lobby pour la prochaine manche/partie.
+          </p>
+        )}
       </div>
     </ModalTemplate>
   );

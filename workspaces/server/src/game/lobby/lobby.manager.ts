@@ -100,6 +100,12 @@ export class LobbyManager {
     lobby.instance.triggerStart(client);
   }
 
+  public launchNextRound(lobbyId: string, client: AuthenticatedSocket): void {
+    const lobby = this.getLobby(lobbyId, client);
+
+    lobby.instance.launchNextRound(client);
+  }
+
   public playCard(
     lobbyId: string,
     card: Cards,

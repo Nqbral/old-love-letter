@@ -50,7 +50,11 @@ export class Instance {
 
   public roundRecap: RoundRecap | undefined;
 
-  constructor(private readonly lobby: Lobby) {}
+  public ownerId: Socket['id'];
+
+  constructor(private readonly lobby: Lobby) {
+    this.ownerId = lobby.owner.id;
+  }
 
   public triggerStart(client: AuthenticatedSocket): void {
     if (this.gameState == GameState.GameStart) {
@@ -94,6 +98,7 @@ export class Instance {
 
   private initializeCards(): void {
     const cards = Object.values(Cards).filter((c) => isString(c)) as Cards[];
+    this.deck = [];
     for (const card of cards) {
       for (let i = 0; i < CardsNumber[card]; i++) {
         this.deck.push(card);
@@ -883,6 +888,34 @@ export class Instance {
     }
   }
 
+  public launchNextRound(client: AuthenticatedSocket): void {
+    if (client.id != this.lobby.owner.id) {
+      throw new ServerException(
+        SocketExceptions.LobbyError,
+        'Only the owner of the lobby can start the game',
+      );
+    }
+
+    this.initializeCards();
+
+    if (this.roundRecap != undefined) {
+      this.playerTurn = this.roundRecap.getPlayerFromWinner().id;
+    }
+
+    Array.from(this.players.values()).forEach((player) => {
+      player.alive = true;
+      player.activeCards = [];
+    });
+
+    this.playerDrawCard();
+    this.lastPlayedCard = undefined;
+    this.secondPlayedCard = undefined;
+    this.gameState = GameState.GameStart;
+    this.roundRecap = undefined;
+
+    this.dispatchGameState();
+  }
+
   public checkEndRound(): boolean {
     let playersAlive = Array.from(this.players.values()).filter((player) => {
       return player.alive;
@@ -926,6 +959,7 @@ export class Instance {
       eventDescription: this.eventDescription,
       roundRecap: this.roundRecap,
       gameState: this.gameState,
+      ownerId: this.ownerId,
     };
 
     this.lobby.dispatchToLobby(ServerEvents.GameState, payload);

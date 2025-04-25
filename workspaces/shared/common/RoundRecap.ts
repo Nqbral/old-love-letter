@@ -9,7 +9,7 @@ export class RoundRecap {
 
   public playersAlive: PlayerGame[];
 
-  public playersWhoWinByMatch: PlayerGame[];
+  public playersWhoWinMatch: PlayerGame[] = [];
 
   constructor(
     public players: PlayerGame[],
@@ -71,12 +71,17 @@ export class RoundRecap {
     let endGame = false;
 
     this.players.forEach((player) => {
-      if (player.score > this.scoreToReach) {
+      if (player.score >= this.scoreToReach) {
         endGame = true;
-        this.playersWhoWinByMatch.push(player);
+        this.playersWhoWinMatch.push(player);
       }
     });
 
     return endGame;
+  }
+
+  public getPlayerFromWinner(): PlayerGame {
+    let index = Math.floor(Math.random() * this.playersWhoWinByValue.length);
+    return this.playersWhoWinByValue[index];
   }
 }

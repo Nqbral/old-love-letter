@@ -85,3 +85,8 @@ export class PlayKingGameDto extends PlayCardGameDto {
   @IsBoolean()
   noEffect: boolean;
 }
+
+export class LobbyLaunchNextRoundDto {
+  @IsString()
+  lobbyId: string;
+}
