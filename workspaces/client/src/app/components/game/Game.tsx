@@ -17,12 +17,15 @@ import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';
 import { Modal } from '@mui/material';
 import { Cards } from '@shared/common/Cards';
+import { ResultEvent } from '@shared/common/EventDescription';
+import { GameState } from '@shared/common/GameState';
 import { useEffect, useState } from 'react';
 import { Hearts } from 'react-loader-spinner';
 import { Slide, ToastContainer, toast } from 'react-toastify';
 
 import ModalChancellorPartTwo from './gamedisplay/showmodals/ModalChancellorPartTwo';
 import ModalPriestGuessed from './gamedisplay/showmodals/ModalPriestGuessed';
+import ModalRecapRound from './gamedisplay/showmodals/ModalRecapRound';
 
 type Props = {
   gameState: ServerPayloads[ServerEvents.GameState];
@@ -69,6 +72,12 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
       cards: [],
     });
   };
+
+  // Recap Round Modal Show
+  const [recapRoundShow, setRecapRoundShow] = useState(false);
+
+  const handleOpenRecapRound = () => setRecapRoundShow(true);
+  const handleCloseRecapRound = () => setRecapRoundShow(false);
 
   useEffect(() => {
     sm.connect();
@@ -169,7 +178,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         hideProgressBar: true,
         closeButton: false,
         style: {
-          width: 250,
+          width: data.result == ResultEvent.DrawBaron ? 250 : 300,
         },
         autoClose: 7000,
       });
@@ -188,7 +197,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         hideProgressBar: true,
         closeButton: false,
         style: {
-          width: 250,
+          width: data.result == ResultEvent.DrawBaron ? 250 : 300,
         },
         autoClose: 7000,
       });
@@ -208,7 +217,7 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         hideProgressBar: true,
         closeButton: false,
         style: {
-          width: 400,
+          width: 300,
         },
         autoClose: 7000,
       });
@@ -326,9 +335,18 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
   }, []);
 
   useEffect(() => {
+    if (
+      [GameState.GameRoundFinished, GameState.GameFinished].includes(
+        gameState.gameState,
+      )
+    ) {
+      handleOpenRecapRound();
+    }
+
     if (gameState.players == '') {
       return;
     }
+
     const playersParsed = JSON.parse(gameState.players, reviver);
     setPlayersParsed(playersParsed);
 
@@ -399,6 +417,17 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
           gameChancellorPlayed={gameChancellorPlayed}
           gameState={gameState}
           handleClose={handleCloseChancellorPartTwo}
+        />
+      </Modal>
+      <Modal
+        open={recapRoundShow}
+        onClose={() => {}}
+        aria-labelledby="modal-recap-round"
+        aria-describedby="modal-recap-round-show"
+      >
+        <ModalRecapRound
+          gameState={gameState}
+          handleClose={handleCloseRecapRound}
         />
       </Modal>
       <ToastContainer transition={Slide} />

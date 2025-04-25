@@ -23,7 +23,9 @@ export default function GameInformations({
   return (
     <>
       <div className="flex w-96 flex-col items-center border-r-1 border-slate-700 px-4 py-8">
-        <h1 className="text-primary text-4xl">Lobby "{lobbyName}"</h1>
+        <h1 className="text-primary text-center text-4xl">
+          Lobby "{lobbyName}"
+        </h1>
         <hr className="my-12 w-32 border-1 border-slate-700" />
         <h2 className="text-secondary-hover pb-4 text-xl">Actions</h2>
         {myPlayer.cards.length == 0 && <div>Vous n'êtes plus en lice.</div>}

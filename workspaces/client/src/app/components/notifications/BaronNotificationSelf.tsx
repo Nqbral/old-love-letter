@@ -23,6 +23,7 @@ type Props = ToastContentProps<{
 
 export default function BaronNotificationSelf({ data }: Props) {
   let cardPlayer = articleCard(data.cardPlayer)?.get('card');
+  let articleCardPlayer = articleCard(data.cardPlayer)?.get('articleCard');
   let cardPlayerTargeted = articleCard(data.cardPlayerTargeted)?.get('card');
   let articleCardPlayerTargeted = articleCard(data.cardPlayerTargeted)?.get(
     'articleCard',
@@ -37,9 +38,10 @@ export default function BaronNotificationSelf({ data }: Props) {
           <span className={data.playerTargeted.color}>
             {data.playerTargeted.playerName}
           </span>
+          .
           {data.result == ResultEvent.VictoryBaron && (
             <div className="text-center">
-              Vous avez gagné avec{' '}
+              Vous avez gagné avec {articleCardPlayer}
               <span className="font-bold">{cardPlayer}</span> contre{' '}
               {articleCardPlayerTargeted}
               <span className="font-bold">{cardPlayerTargeted}</span>.
@@ -47,7 +49,7 @@ export default function BaronNotificationSelf({ data }: Props) {
           )}
           {data.result == ResultEvent.LooseBaron && (
             <div className="text-center">
-              Vous avez perdu avec{' '}
+              Vous avez perdu avec {articleCardPlayer}
               <span className="font-bold">{cardPlayer}</span> contre{' '}
               {articleCardPlayerTargeted}
               <span className="font-bold">{cardPlayerTargeted}</span>.

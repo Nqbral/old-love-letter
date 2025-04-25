@@ -25,6 +25,9 @@ export default function BaronNotificationTarget({ data }: Props) {
   let cardPlayer = articleCard(data.cardPlayer)?.get('card');
   let articleCardPlayer = articleCard(data.cardPlayer)?.get('articleCard');
   let cardPlayerTargeted = articleCard(data.cardPlayerTargeted)?.get('card');
+  let articleCardPlayerTargeted = articleCard(data.cardPlayerTargeted)?.get(
+    'articleCard',
+  );
 
   return (
     <div className={`${medievalsharp.className}`}>
@@ -35,17 +38,19 @@ export default function BaronNotificationTarget({ data }: Props) {
           joué le <span className="font-bold">Baron</span> contre vous.
           {data.result == ResultEvent.VictoryBaron && (
             <div className="text-center">
-              Vous avez gagné avec{' '}
-              <span className="font-bold">{cardPlayerTargeted}</span> contre{' '}
-              {articleCardPlayer}
+              Vous avez gagné avec {articleCardPlayerTargeted}
+              <span className="font-bold">
+                {cardPlayerTargeted}
+              </span> contre {articleCardPlayer}
               <span className="font-bold">{cardPlayer}</span>.
             </div>
           )}
           {data.result == ResultEvent.LooseBaron && (
             <div className="text-center">
-              Vous avez perdu avec{' '}
-              <span className="font-bold">{cardPlayerTargeted}</span> contre{' '}
-              {articleCardPlayer}
+              Vous avez perdu avec {articleCardPlayerTargeted}
+              <span className="font-bold">
+                {cardPlayerTargeted}
+              </span> contre {articleCardPlayer}
               <span className="font-bold">{cardPlayer}</span>.
             </div>
           )}

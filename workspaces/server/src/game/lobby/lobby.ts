@@ -76,11 +76,14 @@ export class Lobby {
       return;
     }
 
-    this.deleteLobby(client);
+    this.deleteLobby(client, false);
   }
 
-  public deleteLobby(client: AuthenticatedSocket) {
-    if (client.id != this.owner.id) {
+  public deleteLobby(
+    client: AuthenticatedSocket | undefined,
+    cronDelete: boolean,
+  ) {
+    if (client?.id != this.owner.id && !cronDelete) {
       throw new ServerException(
         SocketExceptions.LobbyError,
         'Only the owner of the lobby can delete it',

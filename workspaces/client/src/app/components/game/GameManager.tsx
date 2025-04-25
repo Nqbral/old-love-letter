@@ -45,6 +45,8 @@ export default function GameManager() {
     playersTurnOrder: [],
     deck: [],
     eventDescription: undefined,
+    roundRecap: undefined,
+    gameState: GameState.InLobby,
   });
   const [lobbyError, setLobbyError] = useState<
     ServerPayloads[ServerEvents.LobbyError]
@@ -143,7 +145,10 @@ export default function GameManager() {
     return <GameLobbyError error={lobbyError} />;
   }
 
-  if (lobbyDelete.message != '') {
+  if (
+    lobbyDelete.message != '' ||
+    lobbyState.gameState == GameState.GameDeleted
+  ) {
     return <GameLobbyDelete data={lobbyDelete} />;
   }
 

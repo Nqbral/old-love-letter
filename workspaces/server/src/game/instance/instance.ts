@@ -2,14 +2,11 @@ import { Lobby } from '@app/game/lobby/lobby';
 import { ServerException } from '@app/game/server.exception';
 import { AuthenticatedSocket } from '@app/game/types';
 import { Cards, CardsNumber, CardsValue } from '@shared/common/Cards';
-import {
-  EventDescription,
-  ResultEvent,
-  TypeEvent,
-} from '@shared/common/EventDescription';
+import { EventDescription, ResultEvent } from '@shared/common/EventDescription';
 import { GameState } from '@shared/common/GameState';
 import { replacer } from '@shared/common/JsonHelper';
 import { PlayerGame } from '@shared/common/Player';
+import { RoundRecap } from '@shared/common/RoundRecap';
 import { ServerEvents } from '@shared/server/ServerEvents';
 import { ServerPayloads } from '@shared/server/ServerPayloads';
 import { SocketExceptions } from '@shared/server/SocketExceptions';
@@ -51,6 +48,8 @@ export class Instance {
 
   public eventDescription: EventDescription;
 
+  public roundRecap: RoundRecap | undefined;
+
   constructor(private readonly lobby: Lobby) {}
 
   public triggerStart(client: AuthenticatedSocket): void {
@@ -75,6 +74,7 @@ export class Instance {
     }
 
     this.gameState = GameState.GameStart;
+    this.roundRecap = undefined;
 
     this.initPlayers();
     this.initializeCards();
@@ -85,21 +85,6 @@ export class Instance {
 
     this.lobby.dispatchLobbyState();
     this.dispatchGameState();
-  }
-
-  public triggerFinish(): void {
-    if (this.gameState === GameState.GameFinished) {
-      return;
-    }
-
-    this.gameState = GameState.GameFinished;
-
-    this.lobby.dispatchToLobby<ServerPayloads[ServerEvents.GameMessage]>(
-      ServerEvents.GameMessage,
-      {
-        message: 'Game finished !',
-      },
-    );
   }
 
   private initializeCards(): void {
@@ -116,12 +101,11 @@ export class Instance {
     this.discardedCard = this.deck.pop();
 
     // Give each player one card
-    this.players.forEach((playerGame, socketId) => {
+    this.players.forEach((playerGame) => {
       let card = this.deck.pop();
-      let player = this.players.get(socketId);
 
-      if (player != null && card != undefined) {
-        player.cards = [card];
+      if (card != undefined) {
+        playerGame.cards = [card];
       }
     });
   }
@@ -252,11 +236,16 @@ export class Instance {
         }
 
         if (card != Cards.Chancellor) {
-          this.nextTurn();
-          this.playerDrawCard();
           if (player.cards.indexOf(card) != -1) {
             player.cards.splice(player.cards.indexOf(card), 1);
           }
+
+          if (this.checkEndRound()) {
+            this.endRound();
+            return;
+          }
+          this.nextTurn();
+          this.playerDrawCard();
         }
 
         this.dispatchGameState();
@@ -704,11 +693,17 @@ export class Instance {
 
     this.eventDescription = EventDescription.fromChancellor(player, 0);
 
-    this.nextTurn();
-    this.playerDrawCard();
     if (player.cards.indexOf(Cards.Chancellor) != -1) {
       player.cards.splice(player.cards.indexOf(Cards.Chancellor), 1);
     }
+
+    if (this.checkEndRound()) {
+      this.endRound();
+      return;
+    }
+
+    this.nextTurn();
+    this.playerDrawCard();
   }
 
   public playChancellorPartTwo(
@@ -883,6 +878,35 @@ export class Instance {
     }
   }
 
+  public checkEndRound(): boolean {
+    let playersAlive = Array.from(this.players.values()).filter((player) => {
+      return player.alive;
+    });
+
+    return playersAlive.length < 2 || this.deck.length == 0;
+  }
+
+  public endRound(): void {
+    let roundRecap = new RoundRecap(
+      Array.from(this.players.values()),
+      this.scoreToReach,
+      this.eventDescription,
+    );
+
+    roundRecap.calculateScoreByValue();
+    roundRecap.calculateScoreBySpy();
+
+    this.gameState = GameState.GameRoundFinished;
+
+    if (roundRecap.checkEndGame()) {
+      this.gameState = GameState.GameFinished;
+    }
+
+    this.roundRecap = roundRecap;
+
+    this.dispatchGameState();
+  }
+
   public dispatchGameState(): void {
     this.lobby.updatedAt = new Date();
     const payload: ServerPayloads[ServerEvents.GameState] = {
@@ -895,6 +919,8 @@ export class Instance {
       playersTurnOrder: this.playersTurnOrder,
       deck: this.deck,
       eventDescription: this.eventDescription,
+      roundRecap: this.roundRecap,
+      gameState: this.gameState,
     };
 
     this.lobby.dispatchToLobby(ServerEvents.GameState, payload);

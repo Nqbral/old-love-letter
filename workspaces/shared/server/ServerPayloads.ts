@@ -2,6 +2,7 @@ import { Cards } from "../common/Cards";
 import { EventDescription, ResultEvent } from "../common/EventDescription";
 import { GameState } from "../common/GameState";
 import { PlayerGame, PlayerLobby } from "../common/Player";
+import { RoundRecap } from "../common/RoundRecap";
 import { ServerEvents } from "./ServerEvents";
 
 export type ServerPayloads = {
@@ -107,5 +108,7 @@ export type ServerPayloads = {
     playersTurnOrder: string[];
     deck: Cards[];
     eventDescription: EventDescription | undefined;
+    roundRecap: RoundRecap | undefined;
+    gameState: GameState;
   };
 };

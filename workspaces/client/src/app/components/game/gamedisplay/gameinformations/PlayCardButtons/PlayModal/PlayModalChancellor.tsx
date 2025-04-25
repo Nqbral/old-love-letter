@@ -36,7 +36,7 @@ export default function PlayModalChancellor({ handleClose, gameState }: Props) {
         </p>
         <div className="flex flex-row gap-12">
           <PrimaryButton
-            buttonText="Mourir"
+            buttonText="Jouer sans effet"
             onClick={playChancellor}
             disabled={false}
           />

@@ -40,7 +40,7 @@ export default function EventDescriptionPrince({ eventDescription }: Props) {
           <span className={eventDescription?.playerTargeted?.color}>
             {eventDescription?.playerTargeted?.playerName}
           </span>{' '}
-          a défaussé la<span className="font-bold">Princesse</span> et est donc
+          a défaussé la <span className="font-bold">Princesse</span> et est donc
           éliminé.
         </div>
       )}

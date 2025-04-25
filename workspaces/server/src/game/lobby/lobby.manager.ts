@@ -84,7 +84,7 @@ export class LobbyManager {
   public deleteLobby(lobbyId: string, client: AuthenticatedSocket): void {
     const lobby = this.getLobby(lobbyId, client);
 
-    lobby.deleteLobby(client);
+    lobby.deleteLobby(client, false);
     this.lobbies.delete(lobbyId);
   }
 
@@ -146,9 +146,9 @@ export class LobbyManager {
           },
         );
 
-        lobby.instance.triggerFinish();
+        lobby.instance.gameState = GameState.GameDeleted;
 
-        this.lobbies.delete(lobby.id);
+        lobby.deleteLobby(undefined, true);
       }
     }
   }
