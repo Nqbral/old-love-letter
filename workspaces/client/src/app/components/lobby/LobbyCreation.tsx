@@ -14,13 +14,11 @@ type Props = {
 export default function LobbyCreation({ setLobbyManagerState }: Props) {
   const { sm } = useSocketManager();
 
-  const [nbPlayers, setNbPlayers] = useState(2);
   const [lobbyName, setLobbyName] = useState('');
   const [validName, setValidName] = useState(false);
   const [errMsgName, setErrMsgName] = useState('');
 
   const backToIntroduction = () => {
-    setNbPlayers(2);
     setLobbyManagerState(LobbyManagerState.LobbyIntroduction);
   };
 
@@ -38,7 +36,6 @@ export default function LobbyCreation({ setLobbyManagerState }: Props) {
     sm.emit({
       event: ClientEvents.LobbyCreate,
       data: {
-        nbPlayers: nbPlayers,
         lobbyName: lobbyName,
       },
     });
@@ -47,19 +44,6 @@ export default function LobbyCreation({ setLobbyManagerState }: Props) {
   return (
     <div className="flex flex-col items-center justify-center gap-6">
       <div className="flex flex-col items-center gap-6">
-        <label htmlFor="players_number">
-          Nombre de joueurs (de 2 à 6 joueurs)
-        </label>
-        <input
-          type="number"
-          name="players_number"
-          min={2}
-          max={6}
-          required
-          defaultValue={nbPlayers}
-          onChange={(event) => setNbPlayers(Number(event.target.value))}
-          className="focus:border-primary-hover hover:border-primary-hover w-12 rounded-md border-1 border-neutral-300 text-center transition-colors duration-300 outline-none"
-        />
         <p
           className={errMsgName ? 'text-red-600' : 'hidden'}
           aria-live="assertive"

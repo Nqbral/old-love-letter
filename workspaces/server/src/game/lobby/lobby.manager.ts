@@ -32,12 +32,8 @@ export class LobbyManager {
     client.data.lobby?.removeClient(client);
   }
 
-  public createLobby(
-    nbPlayers: number,
-    owner: AuthenticatedSocket,
-    lobbyName: string,
-  ): Lobby {
-    const lobby = new Lobby(this.server, nbPlayers, owner, lobbyName);
+  public createLobby(owner: AuthenticatedSocket, lobbyName: string): Lobby {
+    const lobby = new Lobby(this.server, owner, lobbyName);
 
     this.lobbies.set(lobby.id, lobby);
 
@@ -61,7 +57,7 @@ export class LobbyManager {
   public joinLobby(lobbyId: string, client: AuthenticatedSocket): void {
     const lobby = this.getLobby(lobbyId, client);
 
-    if (lobby.clients.size >= lobby.maxClients) {
+    if (lobby.clients.size >= 6) {
       this.server.to(client.id).emit(ServerEvents.LobbyError, {
         error: 'Lobby full',
         message: 'La partie est déjà pleine.',

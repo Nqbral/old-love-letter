@@ -32,7 +32,6 @@ export class Lobby {
 
   constructor(
     private readonly server: Server,
-    public readonly maxClients: number,
     public readonly owner: AuthenticatedSocket,
     public readonly lobbyName: string,
   ) {}
@@ -109,7 +108,6 @@ export class Lobby {
       players: JSON.stringify(this.players, replacer),
       ownerName: this.ownerName,
       ownerId: this.owner.id,
-      maxClients: this.maxClients,
     };
 
     this.dispatchToLobby(ServerEvents.LobbyState, payload);

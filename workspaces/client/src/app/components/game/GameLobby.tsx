@@ -9,6 +9,7 @@ import { reviver } from '@love-letter/shared/common/JsonHelper';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 type Props = {
   lobbyState: ServerPayloads[ServerEvents.LobbyState] | null;
@@ -17,6 +18,7 @@ type Props = {
 export default function GameLobby({ lobbyState }: Props) {
   const { sm } = useSocketManager();
   const router = useRouter();
+  const [errMsgName, setErrMsgName] = useState('');
   const isOwner = sm.getSocketId() === lobbyState?.ownerId;
   let playersParsed = new Map();
 
@@ -25,6 +27,15 @@ export default function GameLobby({ lobbyState }: Props) {
   }
 
   const onStartGame = () => {
+    if (playersParsed.size < 2) {
+      setErrMsgName("Il n'y a pas assez de joueurs pour lancer la partie.");
+      return;
+    }
+
+    if (playersParsed.size > 6) {
+      setErrMsgName('Il y a trop de joueurs pour lancer la partie.');
+      return;
+    }
     sm.emit({
       event: ClientEvents.StartGame,
       data: {
@@ -56,9 +67,8 @@ export default function GameLobby({ lobbyState }: Props) {
   return (
     <div className="flex flex-col items-center justify-center gap-6">
       <h1 className="text-primary text-4xl">Lobby "{lobbyState?.lobbyName}"</h1>
-      <p className="italic">
-        Nombre de joueurs requis : {lobbyState?.maxClients}
-      </p>
+      <p className="italic">Nombre de joueurs minimum requis : 2</p>
+      <p className="italic">Nombre de joueurs maximum : 6</p>
       <div className="flex w-100 flex-col items-center justify-center gap-2 border-1 border-slate-700 py-4">
         <h2 className="mb-2 text-lg">Liste des joueurs</h2>
         {Array.from(playersParsed).map((player, index) => {
@@ -67,6 +77,12 @@ export default function GameLobby({ lobbyState }: Props) {
           );
         })}
       </div>
+      <p
+        className={errMsgName ? 'text-red-600' : 'hidden'}
+        aria-live="assertive"
+      >
+        {errMsgName}
+      </p>
       <div className="mt-2 flex flex-row gap-12">
         {isOwner && (
           <PrimaryButton

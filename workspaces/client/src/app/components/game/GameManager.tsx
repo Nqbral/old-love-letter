@@ -31,7 +31,6 @@ export default function GameManager() {
     players: '',
     ownerName: '',
     ownerId: '',
-    maxClients: 2,
   });
   const [gameState, setGameState] = useState<
     ServerPayloads[ServerEvents.GameState]

@@ -15,7 +15,6 @@ export type ServerPayloads = {
     players: string;
     ownerId: string;
     ownerName: string;
-    maxClients: number;
   };
 
   [ServerEvents.LobbyError]: {

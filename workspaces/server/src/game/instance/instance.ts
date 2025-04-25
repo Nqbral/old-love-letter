@@ -64,12 +64,17 @@ export class Instance {
       );
     }
 
-    if (
-      this.lobby.maxClients > Array.from(this.lobby.players.values()).length
-    ) {
+    if (Array.from(this.lobby.players.values()).length < 2) {
       throw new ServerException(
         SocketExceptions.LobbyError,
-        'The lobby is not full',
+        'There is not enough players',
+      );
+    }
+
+    if (Array.from(this.lobby.players.values()).length > 6) {
+      throw new ServerException(
+        SocketExceptions.LobbyError,
+        'There is too much players',
       );
     }
 
