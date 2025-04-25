@@ -90,3 +90,8 @@ export class LobbyLaunchNextRoundDto {
   @IsString()
   lobbyId: string;
 }
+
+export class LobbyRelaunchGameDto {
+  @IsString()
+  lobbyId: string;
+}

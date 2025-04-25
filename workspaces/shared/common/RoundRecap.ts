@@ -14,7 +14,7 @@ export class RoundRecap {
   constructor(
     public players: PlayerGame[],
     public scoreToReach: number,
-    public eventDescription: EventDescription
+    public eventDescription: EventDescription | undefined
   ) {
     this.playersAlive = this.players.filter((player) => {
       return player.alive;

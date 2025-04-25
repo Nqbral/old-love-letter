@@ -34,7 +34,9 @@ type Props = {
 };
 
 export default function Game({ gameState, clientId, lobbyName }: Props) {
+  const [myPlayersTurnOrder, setMyPlayersTurnOrder] = useState(['']);
   const [playersTurnOrder, setPlayersTurnOrder] = useState(['']);
+  const [resetOrder, setResetOrder] = useState(false);
   const [playersParsed, setPlayersParsed] = useState(new Map());
   const { sm } = useSocketManager();
 
@@ -354,7 +356,19 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
     const playersParsed = JSON.parse(gameState.players, reviver);
     setPlayersParsed(playersParsed);
 
-    if (clientId != null && playersTurnOrder[0] == '') {
+    const compareArrays = (a: string[], b: string[]) => {
+      return JSON.stringify(a) === JSON.stringify(b);
+    };
+
+    let needReset = false;
+
+    if (!compareArrays(gameState.playersTurnOrder, playersTurnOrder)) {
+      setPlayersTurnOrder(gameState.playersTurnOrder);
+      setResetOrder(true);
+      needReset = true;
+    }
+
+    if (clientId != null && needReset) {
       const indexMyPlayerTurn = gameState.playersTurnOrder.findIndex(
         (playerTurn) => {
           return playerTurn == clientId;
@@ -363,23 +377,29 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
 
       if (indexMyPlayerTurn != -1) {
         const lengthPlayersTurnOrder = gameState.playersTurnOrder.length;
+
         if (indexMyPlayerTurn === 0) {
-          setPlayersTurnOrder(
+          setMyPlayersTurnOrder(
             gameState.playersTurnOrder.slice(1, lengthPlayersTurnOrder),
           );
+          setResetOrder(false);
           return;
         }
+
         if (indexMyPlayerTurn === lengthPlayersTurnOrder - 1) {
-          setPlayersTurnOrder(
+          setMyPlayersTurnOrder(
             gameState.playersTurnOrder.slice(0, indexMyPlayerTurn),
           );
+          setResetOrder(false);
           return;
         }
-        setPlayersTurnOrder(
+
+        setMyPlayersTurnOrder(
           gameState.playersTurnOrder
             .slice(indexMyPlayerTurn + 1, lengthPlayersTurnOrder)
             .concat(gameState.playersTurnOrder.slice(0, indexMyPlayerTurn)),
         );
+        setResetOrder(false);
       }
     }
   }, [gameState]);
@@ -442,17 +462,21 @@ export default function Game({ gameState, clientId, lobbyName }: Props) {
         <Deck gameState={gameState} />
         <div className="flex h-full w-full flex-col items-center justify-around">
           <Player myPlayer={playersParsed.get(clientId)} />
-          <div className="flex flex-row gap-32">
-            {playersTurnOrder[0] != '' &&
-              playersTurnOrder.map((playerTurn) => {
-                return (
-                  <OtherPlayer
-                    key={playerTurn}
-                    player={playersParsed.get(playerTurn)}
-                  />
-                );
-              })}
-          </div>
+          {resetOrder ? (
+            <></>
+          ) : (
+            <div className="flex flex-row gap-32">
+              {myPlayersTurnOrder[0] != '' &&
+                myPlayersTurnOrder.map((playerTurn) => {
+                  return (
+                    <OtherPlayer
+                      key={playerTurn}
+                      player={playersParsed.get(playerTurn)}
+                    />
+                  );
+                })}
+            </div>
+          )}
         </div>
       </div>
     </div>

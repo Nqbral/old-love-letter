@@ -2,6 +2,7 @@ import {
   LobbyCreateDto,
   LobbyJoinDto,
   LobbyLaunchNextRoundDto,
+  LobbyRelaunchGameDto,
   LobbyRenamePlayerDto,
   PlayBaronGameDto,
   PlayCardGameDto,
@@ -171,5 +172,13 @@ export class GameGateway implements OnGatewayConnection {
     data: LobbyLaunchNextRoundDto,
   ): void {
     this.lobbyManager.launchNextRound(data.lobbyId, client);
+  }
+
+  @SubscribeMessage(ClientEvents.GameRelaunchGame)
+  onRelaunchGame(
+    client: AuthenticatedSocket,
+    data: LobbyRelaunchGameDto,
+  ): void {
+    this.lobbyManager.relaunchGame(data.lobbyId, client);
   }
 }

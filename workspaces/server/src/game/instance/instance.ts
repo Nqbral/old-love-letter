@@ -46,7 +46,7 @@ export class Instance {
 
   public scoreToReach: number;
 
-  public eventDescription: EventDescription;
+  public eventDescription: EventDescription | undefined;
 
   public roundRecap: RoundRecap | undefined;
 
@@ -813,7 +813,7 @@ export class Instance {
   }
 
   public playPrincessCard(player: PlayerGame) {
-    let indexPrincessPlayer = player.cards.indexOf(Cards.Baron);
+    let indexPrincessPlayer = player.cards.indexOf(Cards.Princess);
     let indexOtherCards = 0;
 
     if (indexPrincessPlayer == 0) {
@@ -910,8 +910,31 @@ export class Instance {
     this.playerDrawCard();
     this.lastPlayedCard = undefined;
     this.secondPlayedCard = undefined;
+    this.eventDescription = undefined;
     this.gameState = GameState.GameStart;
     this.roundRecap = undefined;
+
+    this.dispatchGameState();
+  }
+
+  public relaunchGame(client: AuthenticatedSocket): void {
+    if (client.id != this.lobby.owner.id) {
+      throw new ServerException(
+        SocketExceptions.LobbyError,
+        'Only the owner of the lobby can start the game',
+      );
+    }
+
+    this.initPlayers();
+    this.initializeCards();
+    this.initializeTurns();
+    this.setRandomTurn();
+    this.playerDrawCard();
+
+    this.lastPlayedCard = undefined;
+    this.secondPlayedCard = undefined;
+    this.gameState = GameState.GameStart;
+    this.eventDescription = undefined;
 
     this.dispatchGameState();
   }

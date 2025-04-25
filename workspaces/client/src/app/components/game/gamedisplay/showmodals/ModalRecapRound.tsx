@@ -28,6 +28,15 @@ export default function ModalRecapRound({ gameState }: Props) {
     });
   };
 
+  const relaunchGame = () => {
+    sm.emit({
+      event: ClientEvents.GameRelaunchGame,
+      data: {
+        lobbyId: gameState.lobbyId,
+      },
+    });
+  };
+
   return (
     <ModalTemplate>
       <div className="flex w-2xl flex-col items-center gap-6 text-center">
@@ -234,7 +243,7 @@ export default function ModalRecapRound({ gameState }: Props) {
         {isOwner && gameState.gameState == GameState.GameFinished && (
           <PrimaryButton
             buttonText="Relancer une nouvelle partie"
-            onClick={() => {}}
+            onClick={relaunchGame}
             disabled={false}
           />
         )}
