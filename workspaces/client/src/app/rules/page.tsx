@@ -1,16 +1,16 @@
 import { faCoins, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import BaronImg from '../../../public/baron.png';
-import ChancellorImg from '../../../public/chancellor.png';
-import CountessImg from '../../../public/countess.png';
-import GuardImg from '../../../public/guard.png';
-import HandmaidImg from '../../../public/handmaid.png';
-import KingImg from '../../../public/king.png';
-import PriestImg from '../../../public/priest.png';
-import PrinceImg from '../../../public/prince.png';
-import PrincessImg from '../../../public/princess.png';
-import SpyImg from '../../../public/spy.png';
+import BaronImg from '../../../public/baron_without_value.png';
+import ChancellorImg from '../../../public/chancellor_without_value.png';
+import CountessImg from '../../../public/countess_without_value.png';
+import GuardImg from '../../../public/guard_without_value.png';
+import HandmaidImg from '../../../public/handmaid_without_value.png';
+import KingImg from '../../../public/king_without_value.png';
+import PriestImg from '../../../public/priest_without_value.png';
+import PrinceImg from '../../../public/prince_without_value.png';
+import PrincessImg from '../../../public/princess_without_value.png';
+import SpyImg from '../../../public/spy_without_value.png';
 import LinkButton from '../components/buttons/LinkButton';
 import PreviousNavBar from '../components/navbar/PreviousNavBar';
 import CardDescription from '../components/rules/CardDescription';
