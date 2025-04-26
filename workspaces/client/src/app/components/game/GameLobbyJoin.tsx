@@ -4,6 +4,8 @@ import useSocketManager from '@components/hooks/useSocketManager';
 import { ClientEvents } from '@love-letter/shared/client/ClientEvents';
 import { ServerEvents } from '@love-letter/shared/server/ServerEvents';
 import { ServerPayloads } from '@love-letter/shared/server/ServerPayloads';
+import { reviver } from '@shared/common/JsonHelper';
+import { PlayerGame } from '@shared/common/Player';
 import { REGEX_RULES } from 'app/constants';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -15,6 +17,7 @@ type Props = {
 export default function GameLobbyJoin({ lobbyState }: Props) {
   const { sm } = useSocketManager();
   const router = useRouter();
+  const clientId = sm.getSocketId();
 
   const [playerName, setPlayerName] = useState('');
   const [errMsgName, setErrMsgName] = useState('');
@@ -51,6 +54,24 @@ export default function GameLobbyJoin({ lobbyState }: Props) {
       },
     });
   };
+
+  if (lobbyState?.players != null) {
+    const playersParsed: Map<string, PlayerGame> = JSON.parse(
+      lobbyState.players,
+      reviver,
+    );
+
+    const hasPlayer = Array.from(playersParsed.values()).find((player) => {
+      return player.id == clientId;
+    });
+
+    if (hasPlayer != undefined) {
+      <div className="flex flex-col items-center justify-center gap-6">
+        <h1 className="text-primary text-4xl">Erreur</h1>
+        <p>Vous avez déjà rejoint le lobby !</p>
+      </div>;
+    }
+  }
 
   return (
     <div className="flex flex-col items-center justify-center gap-6">
