@@ -1,4 +1,12 @@
 services:
+  client:
+    build:
+      context: .
+      dockerfile: ./docker/client/Dockerfile
+    ports:
+      - "3874:3000"
+    restart: unless-stopped
+
   server:
     build:
       context: .
@@ -7,12 +15,4 @@ services:
       - "3875:3000"
     volumes:
       - "./workspaces/server/var:/home/workspaces/server/var"
-    restart: unless-stopped
-
-  client:
-    build:
-      context: .
-      dockerfile: ./docker/client/Dockerfile
-    ports:
-      - "3876:3000"
     restart: unless-stopped
